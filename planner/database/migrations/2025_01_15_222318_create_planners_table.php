@@ -6,12 +6,9 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
-    public function up(): void
+    public function up()
     {
-        Schema::create('planer', function (Blueprint $table) {
+        Schema::create('planners', function (Blueprint $table) {
             $table->id();
             $table->string('ime', 255);
             $table->timestamp('datum_kreiranja')->default(DB::raw('CURRENT_TIMESTAMP'));
@@ -20,11 +17,8 @@ return new class extends Migration
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
+    public function down()
     {
-        Schema::dropIfExists('planer');
+        Schema::dropIfExists('planners');
     }
 };

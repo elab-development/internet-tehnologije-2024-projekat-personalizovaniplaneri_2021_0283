@@ -11,9 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('porudzbina', function (Blueprint $table) {
-            //
-            $table->dropColumn('naziv');
+        Schema::create('categories', function (Blueprint $table) {
+            $table->id();
+            $table->string('naziv', 255);
+            $table->string('sifra', 255);
+            $table->timestamps();
         });
     }
 
@@ -22,9 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('porudzbina', function (Blueprint $table) {
-            //
-            $table->string('naziv', 255);
-        });
+        Schema::dropIfExists('categories');
     }
 };

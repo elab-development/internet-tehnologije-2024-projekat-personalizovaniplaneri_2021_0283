@@ -11,9 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('korisnik', function (Blueprint $table) {
+        Schema::table('orders', function (Blueprint $table) {
             //
-            $table->renameColumn('name', 'ime');
+            $table->unsignedBigInteger('id_planer'); 
+            $table->foreign('id_planer')->references('id')->on('planners'); 
         });
     }
 
@@ -22,9 +23,10 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('korisnik', function (Blueprint $table) {
+        Schema::table('orders', function (Blueprint $table) {
             //
-            $table->renameColumn('ime', 'name');
+            $table->dropForeign(['id_vrsta']); 
+            $table->dropColumn('id_vrsta');
         });
     }
 };

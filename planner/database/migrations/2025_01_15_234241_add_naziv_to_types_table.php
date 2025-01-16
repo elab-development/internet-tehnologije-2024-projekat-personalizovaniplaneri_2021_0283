@@ -11,10 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('vrsta', function (Blueprint $table) {
-            $table->id();
+        Schema::table('types', function (Blueprint $table) {
+            //
             $table->string('naziv', 255);
-            $table->timestamps();
         });
     }
 
@@ -23,6 +22,9 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('vrsta');
+        Schema::table('types', function (Blueprint $table) {
+            //
+            $table->dropColumn('naziv');
+        });
     }
 };

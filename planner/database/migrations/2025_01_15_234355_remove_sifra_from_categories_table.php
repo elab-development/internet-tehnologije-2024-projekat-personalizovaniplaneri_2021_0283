@@ -11,11 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('personalizacija', function (Blueprint $table) {
+        Schema::table('categories', function (Blueprint $table) {
             //
-            $table->unsignedBigInteger('id_vrsta'); 
-            $table->foreign('id_vrsta')->references('id')->on('vrsta')->onDelete('cascade');
-           
+            $table->dropColumn('sifra');
         });
     }
 
@@ -24,10 +22,9 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('personalizacija', function (Blueprint $table) {
+        Schema::table('categories', function (Blueprint $table) {
             //
-            $table->dropForeign(['id_vrsta']);
-            $table->dropColumn('id_vrsta');
+            $table->string('sifra', 255);
         });
     }
 };
