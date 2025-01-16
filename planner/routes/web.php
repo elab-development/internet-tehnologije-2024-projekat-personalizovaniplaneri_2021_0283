@@ -9,3 +9,5 @@ Route::get('/', function () {
 Route::get('/greeting', function () {
     return 'Cao svima!';
 });
+
+Route::get('/users', [UserController::class, 'index']);

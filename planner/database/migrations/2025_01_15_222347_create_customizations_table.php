@@ -8,20 +8,20 @@ return new class extends Migration
 {
     public function up()
     {
-        Schema::create('customizations', function (Blueprint $table) {
+        Schema::create('customization', function (Blueprint $table) {
             $table->id();
             $table->string('boja', 255)->nullable();
             $table->string('slika', 255)->nullable();
             $table->string('font', 255)->nullable();
             $table->text('tekst')->nullable();
-            $table->foreignId('id_planer');
-            $table->foreignId('id_vrsta');
+            $table->foreignId('planner_id');
+            $table->foreignId('category_id');
             $table->timestamps();
         });
     }
 
     public function down()
     {
-        Schema::dropIfExists('customizations');
+        Schema::dropIfExists('customization');
     }
 };

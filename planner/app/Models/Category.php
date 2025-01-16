@@ -10,10 +10,10 @@ class Category extends Model
     /** @use HasFactory<\Database\Factories\CategoryFactory> */
     use HasFactory;
 
-    protected $table = 'categories';
+    protected $table = 'category';
 
     protected $fillable = [
-        'name',
+        'naziv',
     ];
 
     public function customizations()

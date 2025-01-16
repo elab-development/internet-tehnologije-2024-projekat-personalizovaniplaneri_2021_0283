@@ -11,9 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('types', function (Blueprint $table) {
+        Schema::table('type', function (Blueprint $table) {
             //
-            $table->string('naziv', 255);
+            $table->string('naziv', 255)->unique();
         });
     }
 
@@ -22,9 +22,9 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('types', function (Blueprint $table) {
+        Schema::table('type', function (Blueprint $table) {
             //
-            $table->dropColumn('naziv');
+            $table->dropColumn('naziv')->unique();
         });
     }
 };

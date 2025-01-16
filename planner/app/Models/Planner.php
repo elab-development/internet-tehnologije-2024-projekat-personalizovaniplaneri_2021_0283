@@ -10,10 +10,10 @@ class Planner extends Model
     /** @use HasFactory<\Database\Factories\PlannerFactory> */
     use HasFactory;
 
-    protected $table = 'planners';
+    protected $table = 'planner';
 
     protected $fillable = [
-        'name',
+        'naziv',
         'created_at',
         'status',
         'user_id',

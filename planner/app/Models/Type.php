@@ -10,10 +10,10 @@ class Type extends Model
     /** @use HasFactory<\Database\Factories\TypeFactory> */
     use HasFactory;
 
-    protected $table = 'types';
+    protected $table = 'type';
 
     protected $fillable = [
-        'name',
+        'naziv',
     ];
 
     public function users()

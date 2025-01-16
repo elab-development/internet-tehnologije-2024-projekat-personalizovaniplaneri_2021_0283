@@ -8,18 +8,18 @@ return new class extends Migration
 {
     public function up()
     {
-        Schema::create('orders', function (Blueprint $table) {
+        Schema::create('order', function (Blueprint $table) {
             $table->id();
             $table->timestamp('datum_porucivanja')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->decimal('cena', 10, 2);
             $table->string('status_porudzbine', 255);
-            $table->foreignId('id_korisnik');
+            $table->foreignId('user_id');
             $table->timestamps();
         });
     }
 
     public function down()
     {
-        Schema::dropIfExists('orders');
+        Schema::dropIfExists('order');
     }
 };

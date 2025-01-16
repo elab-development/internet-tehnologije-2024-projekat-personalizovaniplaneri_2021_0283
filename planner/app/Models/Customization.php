@@ -10,11 +10,11 @@ class Customization extends Model
     /** @use HasFactory<\Database\Factories\CustomizationFactory> */
     use HasFactory;
 
-    protected $table = 'customizations';
+    protected $table = 'customization';
 
     protected $fillable = [
-        'color',
-        'image',
+        'boja',
+        'slika',
         'font',
         'text',
         'planner_id',
