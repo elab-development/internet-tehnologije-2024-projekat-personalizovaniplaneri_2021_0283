@@ -10,11 +10,11 @@ class Customization extends Model
     /** @use HasFactory<\Database\Factories\CustomizationFactory> */
     use HasFactory;
 
-    protected $table = 'customizations';
+    protected $table = 'customization';
 
     protected $fillable = [
-        'color',
-        'image',
+        'boja',
+        'slika',
         'font',
         'text',
         'planner_id',
@@ -23,11 +23,11 @@ class Customization extends Model
 
     public function planner()
     {
-        return $this->belongsTo(Planner::class);
+        return $this->hasMany(Planner::class);
     }
 
     public function category()
     {
-        return $this->belongsTo(Category::class);
+        return $this->hasMany(Category::class);
     }
 }

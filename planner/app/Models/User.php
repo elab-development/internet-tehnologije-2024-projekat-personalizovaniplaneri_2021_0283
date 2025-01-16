@@ -10,14 +10,14 @@ class User extends Model
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory;
 
-    protected $table = 'users';
+    protected $table = 'user';
 
     protected $fillable = [
-        'name',
-        'surname',
+        'ime',
+        'prezime',
         'email',
-        'password',
-        'registration_date',
+        'sifra',
+        'datum_registracije',
         'type_id',
     ];
 
@@ -26,7 +26,7 @@ class User extends Model
         return $this->hasOne(Type::class);
     }
 
-    public function orders()
+    public function order()
     {
         return $this->hasMany(Order::class);
     }

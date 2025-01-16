@@ -10,22 +10,22 @@ class Planner extends Model
     /** @use HasFactory<\Database\Factories\PlannerFactory> */
     use HasFactory;
 
-    protected $table = 'planners';
+    protected $table = 'planner';
 
     protected $fillable = [
-        'name',
+        'naziv',
         'created_at',
         'status',
         'user_id',
     ];
 
-    public function user()
+    /*public function user()
     {
         return $this->belongsTo(User::class);
-    }
+    }*/
 
-    public function customization()
+    /*public function customization()
     {
         return $this->hasOne(Customization::class);
-    }
+    }*/
 }

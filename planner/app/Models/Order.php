@@ -10,11 +10,11 @@ class Order extends Model
     /** @use HasFactory<\Database\Factories\OrderFactory> */
     use HasFactory;
 
-    protected $table = 'orders';
+    protected $table = 'order';
 
     protected $fillable = [
-        'order_date',
-        'price',
+        'datum_porucivanja',
+        'cena',
         'status',
         'user_id',
         'planner_id',

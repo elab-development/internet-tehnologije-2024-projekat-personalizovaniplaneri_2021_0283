@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Planner;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -9,6 +10,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class PlannerFactory extends Factory
 {
+    protected $model = Planner::class;
     /**
      * Define the model's default state.
      *
@@ -17,7 +19,8 @@ class PlannerFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+                'naziv' => $this->faker->word(), // Generiše nasumičan naziv planera, npr. "Moj Planer"
+                'status' => $this->faker->randomElement(['poslat', 'u obradi', 'otkazan', 'u pripremi']), // Nasumičan status planera
         ];
     }
 }

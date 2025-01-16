@@ -8,7 +8,7 @@ return new class extends Migration
 {
     public function up()
     {
-        Schema::create('planners', function (Blueprint $table) {
+        Schema::create('planner', function (Blueprint $table) {
             $table->id();
             $table->string('ime', 255);
             $table->timestamp('datum_kreiranja')->default(DB::raw('CURRENT_TIMESTAMP'));
@@ -19,6 +19,6 @@ return new class extends Migration
 
     public function down()
     {
-        Schema::dropIfExists('planners');
+        Schema::dropIfExists('planner');
     }
 };

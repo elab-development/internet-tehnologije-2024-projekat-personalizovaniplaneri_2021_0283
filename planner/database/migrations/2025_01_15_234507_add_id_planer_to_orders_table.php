@@ -11,10 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('orders', function (Blueprint $table) {
+        Schema::table('order', function (Blueprint $table) {
             //
-            $table->unsignedBigInteger('id_planer'); 
-            $table->foreign('id_planer')->references('id')->on('planners'); 
+            $table->foreignId('planner_id');
         });
     }
 
@@ -23,10 +22,10 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('orders', function (Blueprint $table) {
+        Schema::table('order', function (Blueprint $table) {
             //
-            $table->dropForeign(['id_vrsta']); 
-            $table->dropColumn('id_vrsta');
+            $table->dropForeign(['category_id']); 
+            $table->dropColumn('category_id');
         });
     }
 };
