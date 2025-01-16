@@ -16,11 +16,12 @@ class UserSeeder extends Seeder
         User::truncate();
         User::factory(10)->create();
 
-        User::factory()->create([
+    /*    User::factory()->create([
             'ime' => 'Test User',  
             'prezime' => 'Testov', 
             'email' => 'test@example.com',  
             'sifra' => bcrypt('password'),  
         ]);
+        */
     }
 }

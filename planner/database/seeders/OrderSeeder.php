@@ -25,6 +25,7 @@ class OrderSeeder extends Seeder
             $user = User::inRandomOrder()->first(); // Nasumičan korisnik sa postojećim ID-em
             $planner = Planner::inRandomOrder()->first();
 
+            /*
             Order::create([
                 'datum_porucivanja' => $faker->dateTimeThisYear(), // Nasumičan datum porudžbine unutar ove godine
                 'cena' => $faker->randomFloat(2, 10, 500), // Nasumična cena između 10 i 500
@@ -32,6 +33,7 @@ class OrderSeeder extends Seeder
                 'user_id' => $user->id, // ID korisnika
                 'planner_id' => $planner->id
             ]);
+            */
         }
     }
 }

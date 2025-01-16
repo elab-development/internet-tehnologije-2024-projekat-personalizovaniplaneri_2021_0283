@@ -15,6 +15,7 @@ class CategorySeeder extends Seeder
     {
         Category::truncate();
         
+        /*
         Category::create([
             'naziv'=>"Mama"
         ]);
@@ -30,5 +31,6 @@ class CategorySeeder extends Seeder
         Category::create([
             'naziv'=>"Putovanja"
         ]);
+        */
     }
 }

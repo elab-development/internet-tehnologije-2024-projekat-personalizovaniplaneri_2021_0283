@@ -2,18 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
+use App\Models\Order;
 use Illuminate\Http\Request;
 
-class UserControler extends Controller
+class OrderController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $users = User::all();
-        return $users;
+        $orders = Order::all();
+        return $orders;
     }
 
     /**
@@ -35,15 +35,19 @@ class UserControler extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(User $user)
+    public function show($order_id)
     {
-        //
+        $order = Order::find($order_id);
+        if(is_null($order)){
+            return response()->json('Data not found', 404);
+        }
+        return response()->json($order);
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(User $user)
+    public function edit(Order $order)
     {
         //
     }
@@ -51,7 +55,7 @@ class UserControler extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, User $user)
+    public function update(Request $request, Order $order)
     {
         //
     }
@@ -59,7 +63,7 @@ class UserControler extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(User $user)
+    public function destroy(Order $order)
     {
         //
     }

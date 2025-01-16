@@ -19,8 +19,10 @@ class CustomizationSeeder extends Seeder
         $planner = Planner::first(); 
         $category = Category::first();
 
+        /*
         if ($planner && $category) {
 
+        
         Customization::create([
             'boja' => 'Plava', // Primer boje
             'slika' => 'image_path_here.jpg', // Putanja do slike
@@ -42,5 +44,6 @@ class CustomizationSeeder extends Seeder
             // Ako nema dostupnih podataka u tabelama, možete ispisati grešku
             $this->command->error('Nema dostupnih podataka za planner i/ili kategoriju.');
         }
+        */
     }
 }

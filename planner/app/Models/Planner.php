@@ -19,13 +19,13 @@ class Planner extends Model
         'user_id',
     ];
 
-    public function user()
+    /*public function user()
     {
         return $this->belongsTo(User::class);
-    }
+    }*/
 
-    public function customization()
+    /*public function customization()
     {
         return $this->hasOne(Customization::class);
-    }
+    }*/
 }

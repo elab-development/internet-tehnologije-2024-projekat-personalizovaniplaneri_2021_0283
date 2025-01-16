@@ -15,6 +15,7 @@ class TypeSeeder extends Seeder
     {
         Type::truncate();
 
+        /*
         Type::create([
             'naziv' => 'Admin', // Tip korisnika: Admin
         ]);
@@ -26,5 +27,6 @@ class TypeSeeder extends Seeder
         Type::create([
             'naziv' => 'Guest', // Tip korisnika: Gost
         ]);
+        */
     }
 }

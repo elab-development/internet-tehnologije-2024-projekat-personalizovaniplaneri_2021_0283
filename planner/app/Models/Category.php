@@ -18,6 +18,7 @@ class Category extends Model
 
     public function customizations()
     {
-        return $this->hasMany(Customization::class);
+        //return $this->hasMany(Customization::class);
+        return $this->belongsTo(Customization::class);
     }
 }
