@@ -21,11 +21,16 @@ class Planner extends Model
 
     /*public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsToMany(User::class, 'order', 'planner_id', 'user_id');
     }*/
 
-    /*public function customization()
+    public function order()
     {
-        return $this->hasOne(Customization::class);
-    }*/
+        return $this->hasMany(Order::class, 'planner_id');
+    }
+
+    public function customization()
+    {
+        return $this->hasMany(Customization::class, 'planner_id');
+    }
 }

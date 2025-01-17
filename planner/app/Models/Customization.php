@@ -23,11 +23,11 @@ class Customization extends Model
 
     public function planner()
     {
-        return $this->hasMany(Planner::class);
+        return $this->belongsTo(Planner::class, 'planner_id');
     }
 
     public function category()
     {
-        return $this->hasMany(Category::class);
+        return $this->belongsTo(Category::class, 'category_id');
     }
 }

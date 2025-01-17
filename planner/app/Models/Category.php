@@ -16,9 +16,8 @@ class Category extends Model
         'naziv',
     ];
 
-    public function customizations()
+    public function customization()
     {
-        //return $this->hasMany(Customization::class);
-        return $this->belongsTo(Customization::class);
+        return $this->hasMany(Customization::class, 'category_id');
     }
 }
