@@ -23,11 +23,16 @@ class User extends Model
 
     public function type()
     {
-        return $this->hasOne(Type::class);
+        return $this->belongsTo(Type::class, 'type_id');
     }
+
+    /*public function planner()
+    {
+        return $this->hasMany(Planner::class, 'user_id');
+    }*/
 
     public function order()
     {
-        return $this->hasMany(Order::class);
+        return $this->hasMany(Order::class, 'user_id');
     }
 }

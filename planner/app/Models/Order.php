@@ -22,11 +22,11 @@ class Order extends Model
 
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     public function planner()
     {
-        return $this->belongsTo(Planner::class);
+        return $this->belongsTo(Planner::class, 'planner_id');
     }
 }
