@@ -15,6 +15,12 @@ class TypeSeeder extends Seeder
     {
         Type::truncate();
 
+        Type::insert([
+            ['naziv' => 'Admin'],    
+            ['naziv' => 'Korisnik'], 
+            ['naziv' => 'Gost'],     
+        ]);
+
         /*
         Type::create([
             'naziv' => 'Admin', // Tip korisnika: Admin

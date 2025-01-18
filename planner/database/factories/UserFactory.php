@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\User;
+use App\Models\Type;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -32,7 +33,7 @@ class UserFactory extends Factory
             'email' => $this->faker->unique()->safeEmail(),
             'sifra' => bcrypt('password'),  // Generiši šifru (bcrypt-ovana)
             'datum_registracije' => $this->faker->dateTime(),  // Datum registracije
-            'type_id' => $this->faker->randomDigit(),  // Tip korisnika (nasumično generiši broj)
+            'type_id' => Type::inRandomOrder()->first()->id,  // Tip korisnika (nasumično generiši broj)
         ];
     }
 

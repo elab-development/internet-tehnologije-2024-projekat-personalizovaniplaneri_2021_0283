@@ -33,6 +33,6 @@ class User extends Model
 
     public function order()
     {
-        return $this->hasMany(Order::class, 'user_id');
+        return $this->hasMany(Order::class, 'order_id');
     }
 }

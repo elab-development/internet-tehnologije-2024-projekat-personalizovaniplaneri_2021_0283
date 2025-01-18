@@ -3,7 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Http\Resources\UserCollection;
 use Illuminate\Http\Request;
+use App\Http\Resources\UserResource;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
+
 
 class UserController extends Controller
 {
@@ -13,7 +19,8 @@ class UserController extends Controller
     public function index()
     {
         $users = User::all();
-        return $users;
+        return new UserCollection($users);
+
     }
 
     /**
@@ -29,19 +36,38 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'ime' => 'required|string|max:255',
+            'prezime' => 'required|string|max:255',
+            'email' => 'required',
+            'sifra' => 'required',
+            'datum_registracije' => 'required',
+            'type_id' => 'required'
+        ]);
+ 
+        if ($validator->fails()) {
+            return response()->json($validator->errors());
+        }
+ 
+        $user = User::create([
+            'ime' => $request->ime,
+            'prezime' => $request->prezime,
+            'email' => $request->email,
+            'sifra' => $request->sifra,
+            'datum_registracije' => $request->datum_registracije,
+            'type_id' => $request->type_id,
+        ]);
+ 
+        return response()->json(['User created successfully.', new UserResource($user)]);
+
     }
 
     /**
      * Display the specified resource.
      */
-    public function show($user_id)
+    public function show(User $user)
     {
-        $user = User::find($user_id);
-        if(is_null($user)){
-            return response()->json('Data not found', 404);
-        }
-        return response()->json($user);
+        return new UserResource($user);
     }
 
     /**
@@ -57,7 +83,29 @@ class UserController extends Controller
      */
     public function update(Request $request, User $user)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'ime' => 'required|string|max:255',
+            'prezime' => 'required|string|max:255',
+            'email' => 'required',
+            'sifra' => 'required',
+            'datum_registracije' => 'required',
+            'type_id' => 'required'
+        ]);
+ 
+        if ($validator->fails()) {
+            return response()->json($validator->errors());
+        }
+
+        $user->ime = $request->ime;
+        $user->prezime = $request->prezime;
+        $user->email = $request->email;
+        $user->sifra = $request->sifra;
+        $user->datum_registracije = $request->datum_registracije;
+        $user->type_id = $request->type_id;
+        $user->save();
+ 
+        return response()->json(['Pser is updated successfully.', new UserResource($user)]);
+
     }
 
     /**
@@ -65,6 +113,8 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
-        //
+        $user->delete();
+        return response()->json('User deleted successfully');
+
     }
 }
