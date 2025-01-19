@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Customization;
+use App\Http\Resources\CustomizationCollection;
 use Illuminate\Http\Request;
 
 class CustomizationController extends Controller
@@ -13,7 +14,7 @@ class CustomizationController extends Controller
     public function index()
     {
         $customizations = Customization::all();
-        return $customizations;
+        return new CustomizationCollection($customizations);
     }
 
     /**

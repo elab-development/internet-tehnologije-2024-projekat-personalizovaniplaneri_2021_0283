@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Type;
+use App\Http\Resources\TypeCollection;
 use Illuminate\Http\Request;
 
 class TypeController extends Controller
@@ -13,7 +14,7 @@ class TypeController extends Controller
     public function index()
     {
         $types = Type::all();
-        return $types;
+        return new TypeCollection($types);
     }
 
     /**

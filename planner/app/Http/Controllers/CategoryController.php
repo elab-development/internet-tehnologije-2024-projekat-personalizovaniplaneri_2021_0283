@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Http\Resources\CategoryCollection;
 use Illuminate\Http\Request;
 
 class CategoryController extends Controller
@@ -13,7 +14,7 @@ class CategoryController extends Controller
     public function index()
     {
         $categories = Category::all();
-        return $categories;
+        return new CategoryCollection($categories);
     }
 
     /**
@@ -37,11 +38,12 @@ class CategoryController extends Controller
      */
     public function show($category_id)
     {
-        $category = Category::find($category_id);
-        if(is_null($category)){
-            return response()->json('Data not found', 404);
-        }
-        return response()->json($category);
+        $category = Category::find($category_id); 
+        if (is_null($category)) { 
+            return response()->json('Data not found', 404); 
+ 
+        } 
+        return response()->json($category); 
     }
 
     /**

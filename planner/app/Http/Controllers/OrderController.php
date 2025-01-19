@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Order;
+use App\Http\Resources\OrderCollection;
 use Illuminate\Http\Request;
 
 class OrderController extends Controller
@@ -13,7 +14,7 @@ class OrderController extends Controller
     public function index()
     {
         $orders = Order::all();
-        return $orders;
+        return new OrderCollection($orders);
     }
 
     /**

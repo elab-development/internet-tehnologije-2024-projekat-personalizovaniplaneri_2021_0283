@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Planner;
+use App\Http\Resources\PlannerResource;
 use Illuminate\Http\Request;
+use App\Http\Resources\PlannerCollection;
 
 class PlannerController extends Controller
 {
@@ -13,7 +15,7 @@ class PlannerController extends Controller
     public function index()
     {
         $planners = Planner::all();
-        return $planners;
+        return new PlannerCollection($planners);
     }
 
     /**
@@ -35,13 +37,9 @@ class PlannerController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show($planner_id)
+    public function show(Planner $planner)
     {
-        $planner = Planner::find($planner_id);
-        if(is_null($planner)){
-            return response()->json('Data not found', 404);
-        }
-        return response()->json($planner);
+        return new PlannerResource($planner);
     }
 
     /**

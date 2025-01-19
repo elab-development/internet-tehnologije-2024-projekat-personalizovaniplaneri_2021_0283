@@ -5,14 +5,14 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class TypeResource extends JsonResource
+class CategoryResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
      *
      * @return array<string, mixed>
      */
-    public static $wrap = 'type';
+    public static $wrap = 'category';
     public function toArray($request)
     {
         //return parent::toArray($request);
@@ -20,6 +20,5 @@ class TypeResource extends JsonResource
             'id' => $this->resource->id,
             'naziv' => $this->resource->naziv,
         ];
-
     }
 }
