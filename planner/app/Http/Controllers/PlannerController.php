@@ -6,6 +6,8 @@ use App\Models\Planner;
 use App\Http\Resources\PlannerResource;
 use Illuminate\Http\Request;
 use App\Http\Resources\PlannerCollection;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Auth;
 
 class PlannerController extends Controller
 {
@@ -31,8 +33,24 @@ class PlannerController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'naziv' => 'required|string|max:255',
+            'status' => 'required|boolean',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
+        }
+
+        $planner = Planner::create([
+            'naziv' => $request->naziv,
+            'status' => $request->status,
+            'user_id' => Auth::user()->id, // Korisnik koji je kreirao planer
+        ]);
+
+        return response()->json(['message' => 'Planner created successfully.', 'data' => $planner], 201);
     }
+    
 
     /**
      * Display the specified resource.
@@ -55,7 +73,26 @@ class PlannerController extends Controller
      */
     public function update(Request $request, Planner $planner)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'naziv' => 'sometimes|string|max:255',
+            'status' => 'sometimes|boolean',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
+        }
+
+        if ($request->has('naziv')) {
+            $planner->naziv = $request->naziv;
+        }
+
+        if ($request->has('status')) {
+            $planner->status = $request->status;
+        }
+
+        $planner->save();
+
+        return response()->json(['message' => 'Planner updated successfully.', 'data' => $planner], 200);
     }
 
     /**
@@ -63,6 +100,8 @@ class PlannerController extends Controller
      */
     public function destroy(Planner $planner)
     {
-        //
+        $planner->delete();
+
+        return response()->json(['message' => 'Planner deleted successfully.'], 200);
     }
 }

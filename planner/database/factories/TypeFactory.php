@@ -19,8 +19,7 @@ class TypeFactory extends Factory
     public function definition(): array
     {
         return [
-            'naziv' => $this->faker->word(),         
-            
+            'naziv' => $this->faker->randomElement(['Admin', 'Korisnik', 'Gost']),
         ];
     }
 }

@@ -13,6 +13,8 @@ use App\Http\Controllers\CategoryCustomizationController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\UserOrderController;
 use App\Http\Controllers\PlannerOrderController;
+use App\Http\Controllers\API\AuthController;
+
 
 
 
@@ -49,4 +51,25 @@ Route::get('/orders/{id}', [OrderController::class, 'show']);
 Route::get('/user/{id}/orders', [UserOrderController::class, 'index']);
 Route::get('/planner/{id}/orders', [PlannerOrderController::class, 'index']);
 
+Route::post('/register', [AuthController::class, 'register']);
+Route::post('/login', [AuthController::class, 'login']);
+
+Route::group(['middleware' => ['auth:sanctum']], function () {
+    Route::get('/profile', function(Request $request) {
+        return auth()->user();
+    });
+    Route::resource('planner', PlannerController::class)->only(['update','store','destroy']);
+
+
+    // API route for logout user
+    Route::post('/logout', [AuthController::class, 'logout']);
+});
+ /*Route::group(['middleware' => ['auth:admin-api']], function () {
+    Route::get('/admin/dashboard', function () {
+        return response()->json(['message' => 'Welcome to admin dashboard']);
+    });
+});
+
+Route::post('/admin/login', [AuthController::class, 'loginAdmin']);
+*/
 

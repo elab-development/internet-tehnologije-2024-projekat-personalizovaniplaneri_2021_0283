@@ -3,12 +3,16 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Model;
+use Laravel\Sanctum\HasApiTokens;
+use Tymon\JWTAuth\Contracts\JWTSubject;
 
-class User extends Model
+class User extends Authenticatable implements JWTSubject
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory;
+    use HasFactory, HasApiTokens, Notifiable;
 
     protected $table = 'user';
 
@@ -20,6 +24,25 @@ class User extends Model
         'datum_registracije',
         'type_id',
     ];
+
+    public function getJWTIdentifier()
+    {
+        return $this->getKey();
+    }
+
+    public function getJWTCustomClaims()
+    {
+        return [
+            'email' => $this->email,
+            'type_id' => $this->type_id, // Dodaj tip korisnika u token
+        ];
+    }
+
+    public function getAuthPassword()
+    {
+        return $this->sifra;
+    }
+
 
     public function type()
     {
