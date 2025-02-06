@@ -1,0 +1,77 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap');
+
+body {
+    font-family: 'Inter', sans-serif;
+    background: linear-gradient(135deg, #f7f6fb, #f4e1f4);
+    color: #333;
+}
+
+/* Glavni kontejner */
+.page-section {
+    padding: 100px 0;
+}
+
+/* Sekcije */
+.page-section-heading {
+    font-size: 2rem;
+    font-weight: 600;
+}
+
+/* Linije */
+.divider-custom {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 20px 0;
+}
+
+.divider-custom-line {
+    width: 50px;
+    height: 4px;
+    background-color: #e1bee7;
+    margin: 0 10px;
+}
+
+.divider-custom-icon {
+    font-size: 2rem;
+    color: #ff8fa3;
+}
+
+/* Dugmad */
+.btn-primary {
+    background: linear-gradient(135deg, #ff8fa3, #ff6f91);
+    border: none;
+    font-weight: bold;
+    color: white;
+    box-shadow: 0px 4px 10px rgba(255, 143, 163, 0.3);
+    transition: all 0.3s ease-in-out;
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, #ff6f91, #ff4f7d);
+    transform: scale(1.05);
+}
+
+.btn-outline-primary {
+    border: 2px solid #ff8fa3;
+    color: #ff8fa3;
+}
+
+.btn-outline-primary:hover {
+    background: #ff8fa3;
+    color: white;
+}
+
+.btn-outline-secondary {
+    border: 2px solid #6c757d;
+    color: #6c757d;
+}
+
+.btn-outline-secondary:hover {
+    background: #6c757d;
+    color: white;
+}
+
+.navbar {
+  background-color: #f1b0bc !important;
+}
