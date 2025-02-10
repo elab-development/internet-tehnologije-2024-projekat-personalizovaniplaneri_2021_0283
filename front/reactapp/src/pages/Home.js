@@ -1,6 +1,9 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 function Home() {
+  const navigate = useNavigate();
+
   return (
     <div>
       <section className="page-section bg-light text-center">
@@ -14,10 +17,10 @@ function Home() {
           <p className="lead">Personalizujte svoj planer i organizujte svoj dan na moderan način!</p>
           <div className="row justify-content-center">
             <div className="col-md-4">
-              <button className="btn btn-outline-primary btn-lg">Prijava</button>
+              <button className="btn btn-outline-primary btn-lg" onClick={() => navigate("/login")}>Prijava</button>
             </div>
             <div className="col-md-4">
-              <button className="btn btn-outline-primary btn-lg">Registracija</button>
+              <button className="btn btn-outline-primary btn-lg" onClick={() => navigate("/register")}>Registracija</button>
             </div>
           </div>
         </div>
