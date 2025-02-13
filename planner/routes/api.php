@@ -15,9 +15,6 @@ use App\Http\Controllers\UserOrderController;
 use App\Http\Controllers\PlannerOrderController;
 use App\Http\Controllers\API\AuthController;
 
-
-
-
 Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
@@ -69,7 +66,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         return response()->json(['message' => 'Welcome to admin dashboard']);
     });
 });
-
-Route::post('/admin/login', [AuthController::class, 'loginAdmin']);
 */
+Route::post('/admin/login', [AuthController::class, 'loginAdmin']);
+
 

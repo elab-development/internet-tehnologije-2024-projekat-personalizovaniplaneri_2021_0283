@@ -45,7 +45,7 @@ class AuthController extends Controller
         $user = auth()->user();
         */
         
-        if(Auth::attempt($request->only('email', 'sifra'))) 
+       /* if(Auth::attempt($request->only('email', 'sifra'))) 
 	    {
             return response()
                 ->json([
@@ -65,14 +65,36 @@ class AuthController extends Controller
                 'type_id' => $user->type_id,
             ],
         ]);
-        */
+        
         $user = User::where('email', $request['email'])->firstOrFail();
 
         $token = $user->createToken('auth_token')->plainTextToken;
 
         return response()
             ->json(['message' => 'Hi ' . $user->ime . ', welcome to home', 'access_token' => $token, 'token_type' => 					'Bearer',]);
-    
+    */
+    $credentials = $request->only('email', 'password');
+
+    if (Auth::attempt($credentials)) {
+        // Ako je autentifikacija uspešna
+        $user = Auth::user();
+        $token = $user->createToken('auth_token')->plainTextToken;
+
+        return response()->json([
+            'message' => 'Welcome ' . $user->ime,
+            'access_token' => $token,
+            'token_type' => 'Bearer',
+            'user' => [
+                'email' => $user->email,
+                'type_id' => $user->type_id,
+            ],
+        ]);
+    }
+
+    // Ako autentifikacija nije uspela
+    return response()->json(['message' => 'Unauthorized'], 401);
+}
+
     }
 
     /*public function loginAdmin(Request $request)
@@ -89,4 +111,3 @@ class AuthController extends Controller
     }*/
 
 
-}
