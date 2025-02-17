@@ -14,19 +14,19 @@ class AuthController extends Controller
     public function register(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'ime' => 'required|string|max:255',
-            'prezime' => 'required|string|max:255',
+            'name' => 'required|string|max:255',
+            'lastName' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:user',
-            'sifra' => 'required|string|min:8'
+            'password' => 'required|string|min:8'
         ]);
         if ($validator->fails())
             return response()->json($validator->errors());
 
         $user = User::create([
-            'ime' => $request->ime,
-            'prezime' => $request->prezime,
+            'ime' => $request->name,
+            'prezime' => $request->lastName,
             'email' => $request->email,
-            'sifra' => Hash::make($request->sifra),
+            'sifra' => Hash::make($request->password),
             'datum_registracije' => now(),
             'type_id'=> 1
         ]);

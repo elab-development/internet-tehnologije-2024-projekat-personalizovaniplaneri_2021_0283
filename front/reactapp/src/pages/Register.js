@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 
 function Register() {
   const [name, setName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState({});
@@ -17,6 +18,7 @@ function Register() {
   const validateForm = () => {
     const newErrors = {};
     if (!name.trim()) newErrors.name = "Ime je obavezno.";
+    if (!lastName.trim()) newErrors.lastName = "Prezime je obavezno.";
     if (!email.trim()) {
       newErrors.email = "Email je obavezan.";
     } else if (!/\S+@\S+\.\S+/.test(email)) {
@@ -48,6 +50,7 @@ function Register() {
           },
           body: JSON.stringify({
             name,
+            lastName,
             email,
             password,
           }),
@@ -97,6 +100,17 @@ function Register() {
               onChange={(e) => setName(e.target.value)}
             />
             {errors.name && <div className="invalid-feedback">{errors.name}</div>}
+          </div>
+          <div className="form-group">
+            <label>Prezime</label>
+            <input
+              type="text"
+              className={`form-control ${errors.lastName ? "is-invalid" : ""}`}
+              value={lastName}
+              onChange={(e) => setLastName(e.target.value)}
+              placeholder="Unesite prezime"
+            />
+            {errors.lastName && <div className="invalid-feedback">{errors.lastName}</div>}
           </div>
           <div className="form-group">
             <label>Email</label>
