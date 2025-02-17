@@ -14,6 +14,7 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\UserOrderController;
 use App\Http\Controllers\PlannerOrderController;
 use App\Http\Controllers\API\AuthController;
+use App\Http\middleware\IsAdmin;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -67,6 +68,12 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     });
 });
 */
-Route::post('/admin/login', [AuthController::class, 'loginAdmin']);
+//Route::post('/admin/login', [AuthController::class, 'loginAdmin']);
+
+Route::middleware(['auth:sanctum', IsAdmin::class])->group(function () {
+    Route::post('/create-user', [UserController::class, 'create']);
+    Route::put('/update-user/{id}', [UserController::class, 'update']);
+    Route::delete('/destroy-user/{id}', [UserController::class, 'destroy']);
+});
 
 
