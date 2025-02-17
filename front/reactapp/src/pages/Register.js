@@ -1,10 +1,18 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import Modal from "../components/Modal";
+import { useNavigate } from "react-router-dom";
 
 function Register() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState({});
+  const [message, setMessage] = useState("");
+  const [isModalOpen, setModalOpen] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+
+  const navigate = useNavigate();
+
 
   const validateForm = () => {
     const newErrors = {};
@@ -23,13 +31,51 @@ function Register() {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const handleSubmit = async (e) => {
+    /*e.preventDefault();
     if (validateForm()) {
       // Add your registration logic here (e.g., API call to Laravel backend)
       console.log("Name:", name, "Email:", email, "Password:", password);
-    }
+    }*/
+      e.preventDefault();
+      if (!validateForm()) return;
+  
+      try {
+        const response = await fetch("http://localhost:8000/api/register", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            name,
+            email,
+            password,
+          }),
+        });
+  
+        const data = await response.json();
+        if (response.ok) {
+          setModalOpen(true);
+          setMessage("Uspešna registracija! Možete se prijaviti.");
+          setName("");
+          setEmail("");
+          setPassword("");
+          setErrors({});
+        } else {
+          setErrors(data.errors || { general: "Greška pri registraciji." });
+        }
+      } catch (error) {
+        setErrors({ general: "Došlo je do greške, pokušajte ponovo kasnije." });
+      }
   };
+  useEffect(() => {
+    if (isModalOpen) {
+      setTimeout(() => {
+        setModalOpen(false);
+        navigate("/login"); // Preusmeravanje na login
+      }, 3000);
+    }
+  }, [isModalOpen, navigate]);
 
   return (
     <section className="page-section">
@@ -76,6 +122,9 @@ function Register() {
           </div>
           <button type="submit" className="btn btn-primary btn-lg mt-3">Registruj se</button>
         </form>
+        <Modal isOpen={isModalOpen} onClose={() => setModalOpen(false)} title="Registracija uspešna">
+          <p>Uspešno ste registrovani!</p>
+        </Modal>
       </div>
     </section>
   );
