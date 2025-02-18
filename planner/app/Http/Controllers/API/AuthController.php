@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use App\Models\Admin;
+
 
 class AuthController extends Controller
 {
@@ -95,19 +97,24 @@ class AuthController extends Controller
     return response()->json(['message' => 'Unauthorized'], 401);
 }
 
+public function loginAdmin(Request $request)
+{
+    $admin = Admin::where('email', $request['email'])->first();
+
+    if (!$admin || !Hash::check($request['password'], $admin->sifra)) {
+        return response()->json(['message' => 'Unauthorized'], 401);
     }
 
-    /*public function loginAdmin(Request $request)
-    {
-        if (!Auth::guard('admin')->attempt($request->only('email',   'sifra'))) {
-            return response()->json(['message' => 'Unauthorized'], 401);
-        }
+    // Ako je sve u redu, admin je prepoznat, onda generiši token
+    $token = $admin->createToken('auth_token')->plainTextToken;
 
-        $admin = Admin::where('email', $request['email'])->firstOrFail();
+    return response()->json([
+        'message' => 'Hi ' . $admin->ime . ', welcome to admin home',
+        'access_token' => $token,
+        'token_type' => 'Bearer'
+    ]);
+}
 
-        $token = $admin->createToken('auth_token')->plainTextToken;
-
-        return response()->json(['message' => 'Hi ' . $admin->ime . ', welcome to admin home', 'access_token' => $token, 'token_type' => 'Bearer']);
-    }*/
+}
 
 

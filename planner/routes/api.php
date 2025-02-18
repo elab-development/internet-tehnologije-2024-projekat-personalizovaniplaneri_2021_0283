@@ -15,6 +15,7 @@ use App\Http\Controllers\UserOrderController;
 use App\Http\Controllers\PlannerOrderController;
 use App\Http\Controllers\API\AuthController;
 use App\Http\middleware\IsAdmin;
+use App\Http\Controllers\API\AdminController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -62,18 +63,22 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     // API route for logout user
     Route::post('/logout', [AuthController::class, 'logout']);
 });
- /*Route::group(['middleware' => ['auth:admin-api']], function () {
+ Route::group(['middleware' => ['auth:admin-api']], function () {
     Route::get('/admin/dashboard', function () {
         return response()->json(['message' => 'Welcome to admin dashboard']);
     });
 });
-*/
-//Route::post('/admin/login', [AuthController::class, 'loginAdmin']);
+
+Route::post('/admin/login', [AuthController::class, 'loginAdmin']);
 
 Route::middleware(['auth:sanctum', IsAdmin::class])->group(function () {
     Route::post('/create-user', [UserController::class, 'create']);
     Route::put('/update-user/{id}', [UserController::class, 'update']);
     Route::delete('/destroy-user/{id}', [UserController::class, 'destroy']);
 });
+
+Route::middleware('auth:sanctum')->get('/admin/profile', [AdminController::class, 'profile']);
+Route::middleware('auth:sanctum')->get('/admin/user', [AdminController::class, 'getUsers']);
+
 
 
