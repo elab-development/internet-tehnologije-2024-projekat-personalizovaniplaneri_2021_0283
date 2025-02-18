@@ -40,9 +40,9 @@ class UserController extends Controller
             'ime' => 'required|string|max:255',
             'prezime' => 'required|string|max:255',
             'email' => 'required',
-            'sifra' => 'required',
-            'datum_registracije' => 'required',
-            'type_id' => 'required'
+            'sifra' => 'sometimes|string',
+            'datum_registracije' => 'sometimes|date',
+            'type_id' => 'sometimes|integer'
         ]);
  
         if ($validator->fails()) {
@@ -53,9 +53,9 @@ class UserController extends Controller
             'ime' => $request->ime,
             'prezime' => $request->prezime,
             'email' => $request->email,
-            'sifra' => $request->sifra,
-            'datum_registracije' => $request->datum_registracije,
-            'type_id' => $request->type_id,
+            'sifra' => $request->sifra ?? null,
+            'datum_registracije' => $request->datum_registracije ?? null,
+            'type_id' => $request->type_id ?? null,
         ]);
  
         return response()->json(['User created successfully.', new UserResource($user)]);
@@ -89,38 +89,59 @@ class UserController extends Controller
      */
     public function update(Request $request, User $user)
     {
-        $validator = Validator::make($request->all(), [
-            'ime' => 'required|string|max:255',
-            'prezime' => 'required|string|max:255',
-            'email' => 'required',
-            'sifra' => 'required',
-            'datum_registracije' => 'required',
-            'type_id' => 'required'
-        ]);
- 
-        if ($validator->fails()) {
-            return response()->json($validator->errors());
+        // Proveri da li korisnik postoji
+        if (!$user) {
+            return response()->json(['message' => 'User not found'], 404);
         }
-
-        $user->ime = $request->ime;
-        $user->prezime = $request->prezime;
-        $user->email = $request->email;
-        $user->sifra = $request->sifra;
-        $user->datum_registracije = $request->datum_registracije;
-        $user->type_id = $request->type_id;
+    
+        // Validacija ulaznih podataka
+        $validator = Validator::make($request->all(), [
+            'ime' => 'sometimes|string|max:255',
+            'prezime' => 'sometimes|string|max:255',
+            'email' => 'sometimes|email',
+            'sifra' => 'sometimes|string',
+            'datum_registracije' => 'sometimes|date',
+            'type_id' => 'sometimes|integer',
+            'role' => 'sometimes|string'
+        ]);
+    
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 400);
+        }
+    
+        // Ažuriraj korisnika sa novim podacima
+        $user->ime = $request->ime ?? $user->ime;
+        $user->prezime = $request->prezime ?? $user->prezime;
+        $user->email = $request->email ?? $user->email;
+        $user->sifra = $request->sifra ?? $user->sifra;
+        $user->datum_registracije = $request->datum_registracije ?? $user->datum_registracije;
+        $user->type_id = $request->type_id ?? $user->type_id;
+        $user->role = $request->role ?? $user->role;
+    
+        // Spasi promene
         $user->save();
- 
-        return response()->json(['Pser is updated successfully.', new UserResource($user)]);
-
+    
+        // Vratiti ažuriranog korisnika
+        return response()->json(['message' => 'User is updated successfully.', 'user' => new UserResource($user)]);
     }
-
+    
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(User $user)
-    {
-        $user->delete();
-        return response()->json('User deleted successfully');
+    public function destroy($id)
+{
+    // Pronađi korisnika
+    $user = User::find($id);
 
+    if (!$user) {
+        return response()->json(['message' => 'User not found'], 404);
     }
+
+    // Obriši korisnika
+    $user->delete();
+
+    return response()->json(['message' => 'User deleted successfully']);
+}
+
+
 }

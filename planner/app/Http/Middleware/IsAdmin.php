@@ -19,9 +19,9 @@ class IsAdmin
         if (Auth::check() && Auth::user()->role === 'admin') {
             return $next($request); // dozvoli pristup
         }
-        else
-        {
-        return response()->json(['message' => 'Access denied, admin only'], 403); // pristup zabranjen
+        else {
+            \Log::info('Pristup odbijen za korisnika: ' . Auth::user()->email);
+            return response()->json(['message' => 'Access denied, admin only'], 403); 
         }
     }
 }
