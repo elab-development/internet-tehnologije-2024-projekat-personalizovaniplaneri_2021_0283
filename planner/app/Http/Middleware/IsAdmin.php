@@ -22,17 +22,21 @@ class IsAdmin
         }
     
         $user = Auth::user();
-        \Log::info('Korisnik je prijavljen:', ['email' => $user->email, 'role' => $user->role]);
-    
-        if ($user->role === 'admin') {
+        \Log::info('Korisnik je prijavljen:', [
+            'email' => $user->email,
+            'type' => $user->type ? $user->type->naziv : 'Nepoznato'
+        ]);
+        
+        if ($user->type_id === 1) { // Proverava da li je admin
             return $next($request);
         }
+        
     
         \Log::info('Pristup odbijen za korisnika: ' . $user->email);
         return response()->json(['message' => 'Access denied, admin only'], 403);
         
         //ispravljamo model jer u softverskoj klasi User.php nemamo role
-        if (Auth::check() && Auth::user()->role === 'admin') {
+        if (Auth::check() && Auth::user()->type_id === 1) {
             return $next($request); // dozvoli pristup
         }
         else {

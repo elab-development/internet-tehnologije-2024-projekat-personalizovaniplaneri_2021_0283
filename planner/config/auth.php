@@ -41,11 +41,11 @@ return [
     ],
     'admin' => [
         'driver' => 'session',
-        'provider' => 'admins',
+        'provider' => 'user',
     ],
     'admin-api' => [
         'driver' => 'sanctum',
-        'provider' => 'admins',
+        'provider' => 'user',
     ],
     'api' => [
         'driver' => 'token',
@@ -78,7 +78,7 @@ return [
         ],
         'admins' => [
             'driver' => 'eloquent',
-            'model' => App\Models\Admin::class,
+            'model' => App\Models\User::class,
         ],
 
 

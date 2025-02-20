@@ -8,7 +8,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
-use App\Models\Admin;
 
 
 class AuthController extends Controller
@@ -30,7 +29,7 @@ class AuthController extends Controller
             'email' => $request->email,
             'sifra' => Hash::make($request->password),
             'datum_registracije' => now(),
-            'type_id'=> 1
+            'type_id'=> 2
         ]);
 
         $token = auth()->login($user);
@@ -101,14 +100,17 @@ public function loginAdmin(Request $request)
 {
     \Log::info('Pokušaj prijave admina:', ['email' => $request->email]);
 
-    $admin = User::where('email', $request['email'])->where('role', 'admin')->first();
+    $admin = User::where('email', $request['email'])->where('type_id', 1)->first();
 
     if (!$admin || !Hash::check($request['password'], $admin->sifra)) {
         \Log::warning('Admin nije pronađen ili lozinka nije tačna:', ['email' => $request->email]);
         return response()->json(['message' => 'Unauthorized'], 401);
     }
 
-    \Log::info('Admin uspešno pronađen:', ['email' => $admin->email, 'role' => $admin->role]);
+    \Log::info('Admin uspešno pronađen:', [
+    'email' => $admin->email,
+    'type' => $admin->type ? $admin->type->naziv : 'Nepoznato'
+]);
 
     $token = $admin->createToken('auth_token')->plainTextToken;
 

@@ -22,14 +22,8 @@ class User extends Authenticatable implements JWTSubject
         'email',
         'sifra',
         'datum_registracije',
-        'type_id',
-        'role',
+        'type_id'
     ];
-    protected $casts = [
-        'role' => 'string',
-    ];
-    
-
     public function getJWTIdentifier()
     {
         return $this->getKey();

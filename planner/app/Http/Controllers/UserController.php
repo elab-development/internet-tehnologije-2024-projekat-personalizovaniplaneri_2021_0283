@@ -43,8 +43,7 @@ class UserController extends Controller
             'email' => 'required',
             'sifra' => 'required|string|min:8',
             'datum_registracije' => 'sometimes|date',
-            'type_id' => 'sometimes|integer',
-            'role' => 'required|in:user,guest,admin'
+            'type_id' => 'required|integer'
         ]);
  
         if ($validator->fails()) {
@@ -58,7 +57,6 @@ class UserController extends Controller
             'sifra' => Hash::make($request->sifra),
             'datum_registracije' => $request->datum_registracije ?? null,
             'type_id' => $request->type_id ?? null,
-            'role' => $request->role ?? 'user',
             
         ]);
  
@@ -107,8 +105,7 @@ class UserController extends Controller
         'email' => 'sometimes|email|unique:user,email,' . $user->id, // Isključuje trenutnog korisnika iz provere za email duplikate
         'sifra' => 'sometimes|string',
         'datum_registracije' => 'sometimes|date',
-        'type_id' => 'sometimes|integer',
-        'role' => 'sometimes|string'
+        'type_id' => 'required|integer'
     ]);
 
     if ($validator->fails()) {
@@ -123,7 +120,6 @@ class UserController extends Controller
     $user->sifra = $request->sifra ?? $user->sifra;
     $user->datum_registracije = $request->datum_registracije ?? $user->datum_registracije;
     $user->type_id = $request->type_id ?? $user->type_id;
-    $user->role = $request->role ?? $user->role;
 
     // Spasi promene
     $user->save();

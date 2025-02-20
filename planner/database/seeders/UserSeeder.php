@@ -27,14 +27,15 @@ class UserSeeder extends Seeder
             'prezime' => 'Testov', 
             'email' => 'test@example.com',  
             'sifra' => bcrypt('password'),
-            'role' => 'user'
+            'type_id' => 2
         ]);
         User::factory()->create([
             'ime' => 'iva',  
             'prezime' => 'lalic', 
             'email' => 'iva@lalic.com',  
             'sifra' => bcrypt('ivalalic123'),
-            'role' => 'admin'
+            'type_id' => 1
+
         ]);
         
     }

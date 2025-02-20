@@ -6,18 +6,17 @@ function Dashboard() {
     const [users, setUsers] = useState([]);
     const [selectedUser, setSelectedUser] = useState(null);
     const [deletedUser, setDeletedUser] = useState(null);
-    const [showUpdateMessage, setShowUpdateMessage] = useState(false); // Stanje za modal
+    const [showUpdateMessage, setShowUpdateMessage] = useState(false);
     const [updatedUser, setUpdatedUser] = useState({
         ime: '',
         prezime: '',
         email: '',
-        role: '',
         sifra: '',
+        type_id: ''
     });
     const [error, setError] = useState(null);
-    const [showDeleteMessage, setShowDeleteMessage] = useState(false); // Stanje za modal
+    const [showDeleteMessage, setShowDeleteMessage] = useState(false);
 
-    // Fetch korisnike
     useEffect(() => {
         const token = localStorage.getItem('token');
         axios.get('http://127.0.0.1:8000/api/admin/user', {
@@ -36,10 +35,8 @@ function Dashboard() {
         });
     }, [error]);
 
-    // Brisanje korisnika
     const handleDelete = (userId) => {
         const token = localStorage.getItem('token');
-
         axios.delete(`http://127.0.0.1:8000/api/destroy-user/${userId}`, {
             headers: {
                 Authorization: `Bearer ${token}`,
@@ -48,12 +45,10 @@ function Dashboard() {
         })
         .then(() => {
             const deletedUserData = users.find(user => user.id === userId);
-            setDeletedUser(deletedUserData);  // Sačuvaj podatke obrisanog korisnika
-            setUsers(prevUsers => prevUsers.filter(user => user.id !== userId));  // Ukloni korisnika iz liste
-
-            // Prikazivanje poruke
+            setDeletedUser(deletedUserData);
+            setUsers(prevUsers => prevUsers.filter(user => user.id !== userId));
             setShowDeleteMessage(true);
-            setTimeout(() => setShowDeleteMessage(false), 3000); // Nestaje nakon 3 sekunde
+            setTimeout(() => setShowDeleteMessage(false), 3000);
         })
         .catch(err => {
             console.error(err);
@@ -61,20 +56,17 @@ function Dashboard() {
         });
     };
 
-    // Postavi korisnika za izmenu
     const handleEdit = (user) => {
         setSelectedUser(user);
         setUpdatedUser({
             ime: user.ime,
             prezime: user.prezime,
             email: user.email,
-            role: user.role,
             sifra: user.sifra,
             type_id: user.type_id
         });
     };
 
-    // Ažuriranje korisnika
     const handleUpdate = (e) => {
         e.preventDefault();
         const token = localStorage.getItem('token');
@@ -83,7 +75,6 @@ function Dashboard() {
             ime: updatedUser.ime,
             prezime: updatedUser.prezime,
             email: updatedUser.email,
-            role: updatedUser.role,
             sifra: updatedUser.sifra,
             type_id: updatedUser.type_id
         };
@@ -95,10 +86,8 @@ function Dashboard() {
             }
         })
         .then(() => {
-            //alert('Korisnik je uspešno ažuriran!');
-            setUsers(users.map(user => user.id === selectedUser.id ? { ...user, ...updatedUser } : user));  // Osveži korisnike
+            setUsers(users.map(user => user.id === selectedUser.id ? { ...user, ...updatedUser } : user));
             setSelectedUser(null);
-
             setShowUpdateMessage(true);
             setTimeout(() => setShowUpdateMessage(false), 3000);
         })
@@ -106,6 +95,15 @@ function Dashboard() {
             console.error(err);
             setError('Failed to update user');
         });
+    };
+
+    const getRoleName = (type_id) => {
+        switch (type_id) {
+            case 1: return 'Administrator';
+            case 2: return 'Korisnik';
+            case 3: return 'Gost';
+            default: return 'Nepoznato';
+        }
     };
 
     return (
@@ -130,7 +128,7 @@ function Dashboard() {
                             <td>{user.ime}</td>
                             <td>{user.prezime}</td>
                             <td>{user.email}</td>
-                            <td>{user.role}</td>
+                            <td>{getRoleName(user.type_id)}</td>
                             <td>
                                 <button className="edit" onClick={() => handleEdit(user)}>Izmeni</button>
                                 <button className="delete" onClick={() => handleDelete(user.id)}>Obriši</button>
@@ -148,7 +146,8 @@ function Dashboard() {
             {showUpdateMessage && (
                 <div className="update-message-modal">
                     <p>Korisnik <strong>{updatedUser.ime} {updatedUser.prezime}</strong> je uspešno ažuriran.</p>
-                </div>)}
+                </div>
+            )}
 
             {selectedUser && (
                 <div className="edit-user-form">
@@ -156,37 +155,22 @@ function Dashboard() {
                     <form onSubmit={handleUpdate}>
                         <label>
                             Ime:
-                            <input 
-                                type="text" 
-                                value={updatedUser.ime} 
-                                onChange={(e) => setUpdatedUser({ ...updatedUser, ime: e.target.value })}
-                            />
+                            <input type="text" value={updatedUser.ime} onChange={(e) => setUpdatedUser({ ...updatedUser, ime: e.target.value })} />
                         </label>
                         <label>
                             Prezime:
-                            <input 
-                                type="text" 
-                                value={updatedUser.prezime} 
-                                onChange={(e) => setUpdatedUser({ ...updatedUser, prezime: e.target.value })}
-                            />
+                            <input type="text" value={updatedUser.prezime} onChange={(e) => setUpdatedUser({ ...updatedUser, prezime: e.target.value })} />
                         </label>
                         <label>
                             Email:
-                            <input 
-                                type="email" 
-                                value={updatedUser.email} 
-                                onChange={(e) => setUpdatedUser({ ...updatedUser, email: e.target.value })}
-                            />
+                            <input type="email" value={updatedUser.email} onChange={(e) => setUpdatedUser({ ...updatedUser, email: e.target.value })} />
                         </label>
                         <label>
                             Uloga:
-                            <select 
-                                value={updatedUser.role} 
-                                onChange={(e) => setUpdatedUser({ ...updatedUser, role: e.target.value })}
-                            >
-                                <option value="user">Korisnik</option>
-                                <option value="admin">Administrator</option>
-                                <option value="guest">Gost</option>
+                            <select value={updatedUser.type_id} onChange={(e) => setUpdatedUser({ ...updatedUser, type_id: Number(e.target.value) })}>
+                                <option value={2}>Korisnik</option>
+                                <option value={1}>Administrator</option>
+                                <option value={3}>Gost</option>
                             </select>
                         </label>
                         <button type="submit">Ažuriraj</button>
@@ -199,6 +183,7 @@ function Dashboard() {
 }
 
 export default Dashboard;
+
 
 
 

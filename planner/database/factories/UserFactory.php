@@ -33,8 +33,7 @@ class UserFactory extends Factory
             'email' => $this->faker->unique()->safeEmail(),
             'sifra' => bcrypt('password'),  // Generiši šifru (bcrypt-ovana)
             'datum_registracije' => $this->faker->dateTime(),  // Datum registracije
-            'type_id' => Type::inRandomOrder()->first()->id,  // Tip korisnika (nasumično generiši broj)
-            'role' => 'user',
+            'type_id' => 2  // Tip korisnika (nasumično generiši broj)
         ];
     }
 
@@ -47,4 +46,12 @@ class UserFactory extends Factory
             'email_verified_at' => null,
         ]);
     }
+    public function admin(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'type_id' => 1, // Admin korisnik
+        ]);
+    }
+    //User::factory()->create();
+    //User::factory()->admin()->create();
 }

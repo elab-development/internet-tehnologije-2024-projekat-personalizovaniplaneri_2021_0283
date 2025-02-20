@@ -9,19 +9,20 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void
-    {
-        Schema::table('user', function (Blueprint $table) {
-            $table->enum('role', ['admin', 'user', 'guest'])->default('user');
-        });
-    }
+  
+        public function up()
+        {
+            Schema::dropIfExists('admins');
+        }
+        
+
 
     /**
      * Reverse the migrations.
      */
     public function down(): void
     {
-        Schema::table('user', function (Blueprint $table) {
+        Schema::table('admins', function (Blueprint $table) {
             //
         });
     }
