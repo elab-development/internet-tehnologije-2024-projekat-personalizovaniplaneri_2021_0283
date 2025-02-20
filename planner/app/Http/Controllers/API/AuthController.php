@@ -82,6 +82,7 @@ class AuthController extends Controller
         $user = Auth::user();
         $token = $user->createToken('auth_token')->plainTextToken;
 
+
         return response()->json([
             'message' => 'Welcome ' . $user->ime,
             'access_token' => $token,
@@ -96,16 +97,19 @@ class AuthController extends Controller
     // Ako autentifikacija nije uspela
     return response()->json(['message' => 'Unauthorized'], 401);
 }
-
 public function loginAdmin(Request $request)
 {
-    $admin = Admin::where('email', $request['email'])->first();
+    \Log::info('Pokušaj prijave admina:', ['email' => $request->email]);
+
+    $admin = User::where('email', $request['email'])->where('role', 'admin')->first();
 
     if (!$admin || !Hash::check($request['password'], $admin->sifra)) {
+        \Log::warning('Admin nije pronađen ili lozinka nije tačna:', ['email' => $request->email]);
         return response()->json(['message' => 'Unauthorized'], 401);
     }
 
-    // Ako je sve u redu, admin je prepoznat, onda generiši token
+    \Log::info('Admin uspešno pronađen:', ['email' => $admin->email, 'role' => $admin->role]);
+
     $token = $admin->createToken('auth_token')->plainTextToken;
 
     return response()->json([
@@ -114,7 +118,6 @@ public function loginAdmin(Request $request)
         'token_type' => 'Bearer'
     ]);
 }
-
 }
 
 

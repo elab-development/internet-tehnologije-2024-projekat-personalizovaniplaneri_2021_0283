@@ -9,6 +9,8 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
 import CategoryList from "./components/CategoryList/CategoryList";
 import PrivateRoute from "./PrivateRoute";
+import Dashboard from "./components/Dashboard";
+import AdminRoute from "./components/AdminRoute";
 
 
 function App() {
@@ -23,7 +25,11 @@ function App() {
             <CategoryList />
           </PrivateRoute>
         } />
-
+        <Route path="/dashboard" element={
+          <AdminRoute> {/* Protect dashboard */}
+            <Dashboard />
+          </AdminRoute>
+        } />
         <Route path="/register" element={<Register />} />
         {/* <Route path="/personalization" element={<Personalization />} /> */}
       </Routes>

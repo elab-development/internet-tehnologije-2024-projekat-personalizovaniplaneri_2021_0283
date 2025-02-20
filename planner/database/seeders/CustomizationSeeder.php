@@ -19,7 +19,7 @@ class CustomizationSeeder extends Seeder
         $planner = Planner::first(); 
         $category = Category::first();
 
-        /*
+        
         if ($planner && $category) {
 
         
@@ -43,7 +43,7 @@ class CustomizationSeeder extends Seeder
         } else {
             // Ako nema dostupnih podataka u tabelama, možete ispisati grešku
             $this->command->error('Nema dostupnih podataka za planner i/ili kategoriju.');
-        }
-        */
+    }
+        
     }
 }

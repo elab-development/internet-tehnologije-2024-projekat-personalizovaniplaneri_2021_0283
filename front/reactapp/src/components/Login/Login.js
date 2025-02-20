@@ -12,6 +12,16 @@ const Login = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
+            console.log("Pokušaj admin prijave...");
+            const response = await axios.post('http://127.0.0.1:8000/api/admin/login', { email, password }, {
+                headers: { 'Accept': 'application/json' }
+            });
+            console.log("Uspešna admin prijava:", response.data);
+            localStorage.setItem('token', response.data.access_token);
+            window.location.href = '/dashboard';  // Preusmeravanje na admin dashboard
+        } catch (adminError) {
+            console.error("Neuspešna admin prijava:", adminError.response?.data);
+        try {
             console.log(email + password);
             const response = await axios.post('http://localhost:8000/api/login', { email, password });
            localStorage.setItem('token', response.data.access_token);
@@ -33,9 +43,10 @@ const Login = () => {
         // Nakon 3 sekunde zatvoriti modal za neuspeh
         setTimeout(() => {
             setErrorModalOpen(false); // Zatvori modal za neuspeh
-        }, 3000);
+            }, 3000);
+        }
     }
-    };
+};
  
     return (
         <section className="page-section">

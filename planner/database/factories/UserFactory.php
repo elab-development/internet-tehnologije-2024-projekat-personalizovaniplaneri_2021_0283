@@ -34,6 +34,7 @@ class UserFactory extends Factory
             'sifra' => bcrypt('password'),  // Generiši šifru (bcrypt-ovana)
             'datum_registracije' => $this->faker->dateTime(),  // Datum registracije
             'type_id' => Type::inRandomOrder()->first()->id,  // Tip korisnika (nasumično generiši broj)
+            'role' => 'user',
         ];
     }
 

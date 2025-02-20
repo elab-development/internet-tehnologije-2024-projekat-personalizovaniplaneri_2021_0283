@@ -4,6 +4,7 @@ import axios from 'axios';
 function CategoryList() {
     const [categories, setCategories] = useState([]);
     const [error, setError] = useState(null);
+    const [loading, setLoading] = useState(true);
     
 
     useEffect(() => {
@@ -15,9 +16,11 @@ function CategoryList() {
         })
         .then(response => {
             setCategories(response.data.categories);
+            setLoading(false);
         })
         .catch(error => {
             setError('Neuspešno učitavanje kategorija');
+            setLoading(false);
         });
     }, []);
 
@@ -37,7 +40,7 @@ function CategoryList() {
                         </div>
                     ))
                 ) : (
-                    <p>Nema dostupnih kategorija</p>
+                    !loading && categories.length === 0 && <p>Nema dostupnih kategorija</p>
                 )}
             </div>
         </div>

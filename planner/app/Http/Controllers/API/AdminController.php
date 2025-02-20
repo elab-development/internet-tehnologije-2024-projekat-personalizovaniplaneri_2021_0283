@@ -28,6 +28,17 @@ class AdminController extends Controller
     $users = User::all(); // ili filter koji ti treba
     return response()->json($users);
 }
+public function userProfile(Request $request)
+{
+    $user = Auth::user(); // Ovo dohvaća autentifikovanog korisnika (ne admina)
+    
+    if (!$user) {
+        return response()->json(['message' => 'Unauthorized'], 401);
+    }
+
+    return response()->json($user);
+}
+
 
 }
 

@@ -16,5 +16,9 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
+Route::get('/test-auth', function () {
+    return response()->json(Auth::user());
+})->middleware('auth:sanctum');
+
 
 require __DIR__.'/auth.php';

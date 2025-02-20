@@ -36,13 +36,15 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
+        dd($request->all());
         $validator = Validator::make($request->all(), [
             'ime' => 'required|string|max:255',
             'prezime' => 'required|string|max:255',
             'email' => 'required',
-            'sifra' => 'sometimes|string',
+            'sifra' => 'required|string|min:8',
             'datum_registracije' => 'sometimes|date',
-            'type_id' => 'sometimes|integer'
+            'type_id' => 'sometimes|integer',
+            'role' => 'required|in:user,guest,admin'
         ]);
  
         if ($validator->fails()) {
@@ -53,9 +55,11 @@ class UserController extends Controller
             'ime' => $request->ime,
             'prezime' => $request->prezime,
             'email' => $request->email,
-            'sifra' => $request->sifra ?? null,
+            'sifra' => Hash::make($request->sifra),
             'datum_registracije' => $request->datum_registracije ?? null,
             'type_id' => $request->type_id ?? null,
+            'role' => $request->role ?? 'user',
+            
         ]);
  
         return response()->json(['User created successfully.', new UserResource($user)]);
@@ -88,42 +92,46 @@ class UserController extends Controller
      * Update the specified resource in storage.
      */
     public function update(Request $request, User $user)
-    {
-        // Proveri da li korisnik postoji
-        if (!$user) {
-            return response()->json(['message' => 'User not found'], 404);
-        }
-    
-        // Validacija ulaznih podataka
-        $validator = Validator::make($request->all(), [
-            'ime' => 'sometimes|string|max:255',
-            'prezime' => 'sometimes|string|max:255',
-            'email' => 'sometimes|email',
-            'sifra' => 'sometimes|string',
-            'datum_registracije' => 'sometimes|date',
-            'type_id' => 'sometimes|integer',
-            'role' => 'sometimes|string'
-        ]);
-    
-        if ($validator->fails()) {
-            return response()->json($validator->errors(), 400);
-        }
-    
-        // Ažuriraj korisnika sa novim podacima
-        $user->ime = $request->ime ?? $user->ime;
-        $user->prezime = $request->prezime ?? $user->prezime;
-        $user->email = $request->email ?? $user->email;
-        $user->sifra = $request->sifra ?? $user->sifra;
-        $user->datum_registracije = $request->datum_registracije ?? $user->datum_registracije;
-        $user->type_id = $request->type_id ?? $user->type_id;
-        $user->role = $request->role ?? $user->role;
-    
-        // Spasi promene
-        $user->save();
-    
-        // Vratiti ažuriranog korisnika
-        return response()->json(['message' => 'User is updated successfully.', 'user' => new UserResource($user)]);
+{
+    \Log::info('Podaci koji dolaze u update:', $request->all());
+    // Proveri da li korisnik postoji
+    if (!$user) {
+        return response()->json(['message' => 'User not found'], 404);
     }
+    \Log::info('ID korisnika koji se ažurira: ' . $user->id);
+
+    // Validacija ulaznih podataka
+    $validator = Validator::make($request->all(), [
+        'ime' => 'sometimes|string|max:255',
+        'prezime' => 'sometimes|string|max:255',
+        'email' => 'sometimes|email|unique:user,email,' . $user->id, // Isključuje trenutnog korisnika iz provere za email duplikate
+        'sifra' => 'sometimes|string',
+        'datum_registracije' => 'sometimes|date',
+        'type_id' => 'sometimes|integer',
+        'role' => 'sometimes|string'
+    ]);
+
+    if ($validator->fails()) {
+        \Log::info('Neuspesna validacija', ['errors' => $validator->errors()]);
+        return response()->json($validator->errors(), 400);
+    }
+
+    // Ažuriraj korisnika sa novim podacima
+    $user->ime = $request->ime ?? $user->ime;
+    $user->prezime = $request->prezime ?? $user->prezime;
+    $user->email = $request->email ?? $user->email;
+    $user->sifra = $request->sifra ?? $user->sifra;
+    $user->datum_registracije = $request->datum_registracije ?? $user->datum_registracije;
+    $user->type_id = $request->type_id ?? $user->type_id;
+    $user->role = $request->role ?? $user->role;
+
+    // Spasi promene
+    $user->save();
+
+    // Vratiti ažuriranog korisnika
+    return response()->json(['message' => 'User is updated successfully.', 'user' => new UserResource($user)]);
+}
+
     
     /**
      * Remove the specified resource from storage.

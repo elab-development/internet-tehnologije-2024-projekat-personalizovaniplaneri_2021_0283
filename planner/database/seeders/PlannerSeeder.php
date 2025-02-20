@@ -15,7 +15,7 @@ class PlannerSeeder extends Seeder
     {
         Planner::truncate();
 
-        /*
+        
         Planner::create([
             
             'naziv' => 'Moj planer', // Naziv planera
@@ -36,7 +36,7 @@ class PlannerSeeder extends Seeder
             'naziv' => 'Ja planer', // Naziv planera
             'status' => 'u pripremi', // Status planera
         ]);
-        */
+        
         
     }
 }

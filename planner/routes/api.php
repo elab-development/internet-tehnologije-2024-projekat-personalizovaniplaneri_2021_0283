@@ -73,11 +73,12 @@ Route::post('/admin/login', [AuthController::class, 'loginAdmin']);
 
 Route::middleware(['auth:sanctum', IsAdmin::class])->group(function () {
     Route::post('/create-user', [UserController::class, 'create']);
-    Route::put('/update-user/{id}', [UserController::class, 'update']);
+    Route::put('/update-user/{user}', [UserController::class, 'update']);
     Route::delete('/destroy-user/{id}', [UserController::class, 'destroy']);
 });
 
 Route::middleware('auth:sanctum')->get('/admin/profile', [AdminController::class, 'profile']);
+Route::middleware('auth:sanctum')->get('/profile', [AdminController::class, 'userProfile']);
 Route::middleware('auth:sanctum')->get('/admin/user', [AdminController::class, 'getUsers']);
 
 

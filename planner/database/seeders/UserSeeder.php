@@ -20,14 +20,22 @@ class UserSeeder extends Seeder
             $this->call(TypeSeeder::class);
         }
 
-        User::factory(10)->create();
+        //User::factory(10)->create();
 
-    /*    User::factory()->create([
+        User::factory()->create([
             'ime' => 'Test User',  
             'prezime' => 'Testov', 
             'email' => 'test@example.com',  
-            'sifra' => bcrypt('password'),  
+            'sifra' => bcrypt('password'),
+            'role' => 'user'
         ]);
-        */
+        User::factory()->create([
+            'ime' => 'iva',  
+            'prezime' => 'lalic', 
+            'email' => 'iva@lalic.com',  
+            'sifra' => bcrypt('ivalalic123'),
+            'role' => 'admin'
+        ]);
+        
     }
 }
