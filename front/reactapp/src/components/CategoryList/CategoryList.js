@@ -83,154 +83,175 @@ function CategoryList() {
     };
 
     return (
-        <div>
-            <h2>Kategorije</h2>
-            {error && <p style={{ color: 'red' }}>{error}</p>}
-
-            {/* Display categories */}
-            <div className="category-list">
-                {categories.length > 0 ? (
-                    categories.map(category => (
-                        <div
-                            key={category.id}
-                            className="category-card"
-                            onClick={() => handleCategorySelect(category)}
-                            style={{
-                                border: selectedCategory?.id === category.id ? '2px solid blue' : '1px solid #ccc',
-                                cursor: 'pointer',
-                                padding: '10px',
-                                margin: '10px',
-                            }}
-                        >
-                            <img
-                                src={`/images/${category.naziv.toLowerCase()}.jpg`}
-                                alt={category.naziv}
-                                style={{ width: '100px', height: '100px' }}
-                            />
-                            <h3>{category.naziv}</h3>
-                        </div>
-                    ))
-                ) : (
-                    !loading && categories.length === 0 && <p>Nema dostupnih kategorija</p>
-                )}
-            </div>
-
-            {/* Display form for color, font, and image */}
-            {selectedCategory && (
-                <div style={{ marginTop: '20px' }}>
-                    <h3>Izabrana kategorija: {selectedCategory.naziv}</h3>
-
-                    {/* Unos naziva planera */}
-                    <div>
-                    <label>Naziv planera: </label>
-                    <input
-                        type="text"
-                        value={plannerName}
-                        onChange={(e) => setPlannerName(e.target.value)}
-                        placeholder="Unesite naziv planera"
-                        style={{ width: '100%', padding: '8px', marginTop: '10px' }}
-                    />
-                    </div>
-
-                    {/* Unos teksta */}
-                    <div>
-                        <label>Tekst: </label>
-                        <textarea
-                            type="text"
-                            value={text}
-                            onChange={(e) => setText(e.target.value)}
-                            placeholder="Unesite tekst"
-                            style={{ width: '100%', padding: '8px', marginTop: '10px', minHeight: '100px' }}
-                        />
-                    </div>
-
-                    {/* Color picker */}
-                    <div>
-                        <label>Izaberite boju: </label>
-                        <input
-                            type="color"
-                            value={color}
-                            onChange={(e) => setColor(e.target.value)}
-                        />
-                    </div>
-
-                    {/* Font picker */}
-                    <div>
-                        <label>Izaberite font: </label>
-                        <select value={font} onChange={(e) => setFont(e.target.value)}>
-                            <option value="Arial">Arial</option>
-                            <option value="Times New Roman">Times New Roman</option>
-                            <option value="Courier New">Courier New</option>
-                            <option value="Verdana">Verdana</option>
-                        </select>
-                    </div>
-
-                    {/* Image upload */}
-                    <div>
-                        <label>Dodajte sliku: </label>
-                        <input
-                            type="file"
-                            accept="image/*"
-                            onChange={handleImageUpload}
-                        />
-                        {previewImage && (
-                            <img
-                                src={previewImage}
-                                alt="Preview"
-                                style={{ width: '100px', height: '100px', marginTop: '10px' }}
-                            />
-                        )}
-                    </div>
-
-                    {/* Preview and generate PDF */}
-                    <div id="pdf-content" style={{ 
-                        marginTop: '20px', 
-                        padding: '20px', 
-                        border: '1px solid #ccc', 
-                        backgroundColor: color, // Set background color
-                        width: '300px', // Set width of the rectangle
-                        height: '400px', // Set height of the rectangle
-                        display: 'flex',
-                        flexDirection: 'column',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        textAlign: 'center',
-                        borderRadius: '10px', // Rounded corners
-                        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)', // Add shadow for better appearance
-                    }}>
-                        {/* Naziv with selected font and color */}
-                        <h2 style={{ 
-                            color: '#ffffff', // White text for better contrast
-                            fontFamily: font, // Apply selected font
-                            fontSize: '24px', // Adjust font size
-                            marginBottom: '20px', // Add spacing
-                        }}>
-                            {selectedCategory.naziv}
-                        </h2>
-
-                        {/* Image preview */}
-                        {previewImage && (
-                            <img
-                                src={previewImage}
-                                alt="Uploaded"
-                                style={{ 
-                                    width: '150px', // Adjust image size
-                                    height: '150px', 
-                                    borderRadius: '50%', // Make the image circular
-                                    objectFit: 'cover', // Ensure the image fits well
-                                    border: '4px solid #ffffff', // Add a white border
-                                }}
-                            />
-                        )}
-                    </div>
-
-                    {/* Generate PDF button */}
-                    <button onClick={savePlanner} style={{ marginTop: '20px', padding: '10px 20px' }}>
-                        Dodaj u korpu
-                    </button>
+        <section className="page-section">
+            <div className="container d-flex flex-column align-items-center">
+                <h2 className="text-uppercase text-secondary mb-3">Kategorije</h2>
+                <div className="divider-custom">
+                    <div className="divider-custom-line"></div>
+                    <div className="divider-custom-icon"><i className="fas fa-user"></i></div>
+                    <div className="divider-custom-line"></div>
                 </div>
-            )}
-        </div>
+                {error && <p style={{ color: 'red' }}>{error}</p>}
+
+                {/* Display categories */}
+                <div className="category-list">
+                    {categories.length > 0 ? (
+                        categories.map(category => (
+                            <div
+                                key={category.id}
+                                className="category-card"
+                                onClick={() => handleCategorySelect(category)}
+                                style={{
+                                    border: selectedCategory?.id === category.id ? '2px solid blue' : '1px solid #ccc',
+                                    cursor: 'pointer',
+                                    padding: '10px',
+                                    margin: '10px',
+                                }}
+                            >
+                                <img
+                                    src={`/images/${category.naziv.toLowerCase()}.jpg`}
+                                    alt={category.naziv}
+                                    style={{ width: '100px', height: '100px' }}
+                                />
+                                <h3>{category.naziv}</h3>
+                            </div>
+                        ))
+                    ) : (
+                        !loading && categories.length === 0 && <p>Nema dostupnih kategorija</p>
+                    )}
+                </div>
+
+                {/* Display form for color, font, and image */}
+                {selectedCategory && (
+                    <div className="form-container" style={{ marginTop: '20px', display: 'flex', justifyContent: 'space-between' }}>
+                        {/* Form Section (Left side) */}
+                        
+                        <div className="form-section" style={{ flex: 1 }}>
+                        <div className="divider-custom">
+                            <div className="divider-custom-line"></div>
+                            <div className="divider-custom-icon"><i className="fas fa-user"></i></div>
+                            <div className="divider-custom-line"></div>
+                        </div>
+                            {/* Unos naziva planera */}
+                            <div className="form-group">
+                        
+                                <input
+                                    type="text"
+                                    className="form-control"
+                                    value={plannerName}
+                                    onChange={(e) => setPlannerName(e.target.value)}
+                                    placeholder="Unesite naziv planera"
+                                />
+                            </div>
+
+                            {/* Unos teksta */}
+                            <div className="form-group">
+                                <textarea
+                                    className="form-control"
+                                    value={text}
+                                    onChange={(e) => setText(e.target.value)}
+                                    placeholder="Ostavite napomenu..."
+                                />
+                            </div>
+
+                            {/* Color picker */}
+                            <div className="form-group">
+                                <p>Izaberite boju: </p>
+                                <input
+                                    type="color"
+                                    className="form-control plus picker"
+                                    value={color}
+                                    onChange={(e) => setColor(e.target.value)}
+                                />
+                            </div>
+
+                            {/* Font picker */}
+                            <div className="form-group">
+                                <label>Izaberite font: </label>
+                                <select
+                                    value={font}
+                                    className="form-control plus"
+                                    onChange={(e) => setFont(e.target.value)}
+                                >
+                                    <option value="Arial">Arial</option>
+                                    <option value="Times New Roman">Times New Roman</option>
+                                    <option value="Courier New">Courier New</option>
+                                    <option value="Verdana">Verdana</option>
+                                </select>
+                            </div>
+
+                            {/* Image upload */}
+                            <div className="form-group">
+                                <label>Dodajte sliku: </label>
+                                <input
+                                    type="file"
+                                    className="form-control"
+                                    accept="image/*"
+                                    onChange={handleImageUpload}
+                                />
+                            </div>
+
+                            
+                        </div>
+
+                        {/* Preview Section (Right side) */}
+                        <div className="preview-section" style={{ flex: 1, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                            <div
+                                id="pdf-content"
+                                style={{
+                                    backgroundColor: color,
+                                    width: '300px',
+                                    height: '400px',
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    textAlign: 'center',
+                                    borderRadius: '10px',
+                                    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
+                                }}
+                            >
+                                {/* Naziv with selected font and color */}
+                                <h2
+                                    style={{
+                                        color: '#ffffff',
+                                        fontFamily: font,
+                                        fontSize: '24px',
+                                        marginBottom: '20px',
+                                    }}
+                                >
+                                    {selectedCategory.naziv}
+                                </h2>
+
+                                {/* Image preview */}
+                                {previewImage && (
+                                    <img
+                                        src={previewImage}
+                                        alt="Uploaded"
+                                        style={{
+                                            width: '150px',
+                                            height: '150px',
+                                            borderRadius: '50%',
+                                            objectFit: 'cover',
+                                            border: '4px solid #ffffff',
+                                        }}
+                                    />
+                                )}
+                            </div>
+                        </div>
+                        {/* Generate PDF button */}
+                        <button
+                            className="btn btn-primary btn-lg mt-3"
+                            onClick={savePlanner}
+                        >
+                            Dodaj u korpu
+                        </button>
+                    </div>
+                )}
+                
+                
+            </div>
+        </section>
     );
 }
 

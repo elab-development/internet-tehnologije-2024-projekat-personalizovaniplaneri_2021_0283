@@ -183,7 +183,43 @@ body {
     text-align: center;
 }
 
+/* Form container (left and right sections) */
+.form-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px; /* Space between the form and the preview */
+}
 
+/* Left section for form */
+.form-section {
+    flex: 1;
+    max-width: 50%; /* Optional: restrict the max width */
+    
+}
+
+/* Right section for image preview */
+.preview-section {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Form inputs styling */
+.form-group {
+    margin-bottom: 20px;
+    display: flex;
+}
+
+.plus {
+    width: 100px;
+    margin-left: 20px;
+}
+
+.picker {
+    height: 40px;
+}
 
 
 
