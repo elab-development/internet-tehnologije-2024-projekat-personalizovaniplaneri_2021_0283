@@ -33,7 +33,7 @@ const Login = () => {
            setTimeout(() => {
                setModalOpen(false);
                navigate('/personalization'); // Preusmeravanje
-           }, 3000);
+           }, 2000);
 
        } catch (error) {
         setErrorModalOpen(true); // Otvori modal za neuspeh

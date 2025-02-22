@@ -16,7 +16,7 @@ class Customization extends Model
         'boja',
         'slika',
         'font',
-        'text',
+        'tekst',
         'planner_id',
         'category_id',
     ];

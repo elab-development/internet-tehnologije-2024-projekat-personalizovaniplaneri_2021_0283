@@ -15,7 +15,7 @@ class Order extends Model
     protected $fillable = [
         'datum_porucivanja',
         'cena',
-        'status',
+        'status_porudzbine',
         'user_id',
         'planner_id',
     ];

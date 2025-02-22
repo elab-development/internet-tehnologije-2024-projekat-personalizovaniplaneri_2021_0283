@@ -40,6 +40,7 @@ Route::get('/categories/{id}', [CategoryController::class, 'show']);
 
 Route::resource('customizations', CustomizationController::class);
 Route::get('/customizations', [CustomizationController::class, 'index']);
+Route::post('/customizations', [CustomizationController::class, 'store']);
 Route::get('/customizations/{id}', [CustomizationController::class, 'show']);
 Route::get('/planner/{id}/customizations', [PlannerCustomizationController::class, 'index']);
 Route::get('/category/{id}/customizations', [CategoryCustomizationController::class, 'index']);
