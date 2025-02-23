@@ -48,7 +48,7 @@ class CustomizationController extends Controller
         // Kreiraj planer
         $planner = Planner::create([
             'naziv' => $request->naziv,
-            'status' => 'poručeno'
+            'status' => 'u prpremi'
         ]);
 
         // Kreiraj customizaciju
@@ -65,6 +65,7 @@ class CustomizationController extends Controller
             'message' => 'Planer uspešno sačuvan',
             'planner' => $planner,
             'customization' => $customization,
+            'customization_id' => $customization->id,
         ]);
     }
 
@@ -99,10 +100,32 @@ class CustomizationController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Customization $customization)
-    {
-        //
+    /**
+ * Remove the specified resource from storage.
+ */
+public function destroy($customizationId)
+{
+    $customization = Customization::find($customizationId);
+    
+    if (is_null($customization)) {
+        return response()->json('Customization not found', 404);
     }
+
+    // Brisanje povezane slike sa diska, ako postoji
+    if ($customization->image_path && Storage::disk('public')->exists($customization->image_path)) {
+        Storage::disk('public')->delete($customization->image_path);
+    }
+
+    // Obriši povezani planer
+    $customization->planner()->delete(); // Obriši povezani planer
+
+    // Brisanje customizacije
+    $customization->delete();
+
+    return response()->json(['message' => 'Customization and associated planner successfully deleted']);
+}
+
+
 }
 
 

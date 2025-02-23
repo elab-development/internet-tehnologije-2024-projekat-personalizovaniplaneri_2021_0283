@@ -42,6 +42,8 @@ Route::resource('customizations', CustomizationController::class);
 Route::get('/customizations', [CustomizationController::class, 'index']);
 Route::post('/customizations', [CustomizationController::class, 'store']);
 Route::get('/customizations/{id}', [CustomizationController::class, 'show']);
+Route::delete('/customizations/{customizationId}', [CustomizationController::class, 'destroy']);
+
 Route::get('/planner/{id}/customizations', [PlannerCustomizationController::class, 'index']);
 Route::get('/category/{id}/customizations', [CategoryCustomizationController::class, 'index']);
 

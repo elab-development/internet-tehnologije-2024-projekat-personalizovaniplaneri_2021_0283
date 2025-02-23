@@ -15,6 +15,8 @@ function CategoryList() {
     const [previewImage, setPreviewImage] = useState(null); // For image preview
     const [plannerName, setPlannerName] = useState('');
     const [text, setText] = useState('');
+    const [cart, setCart] = useState([]); // Korpa state
+    const [showCart, setShowCart] = useState(false); // Da li je korpa vidljiva
 
     // Fetch categories
     useEffect(() => {
@@ -48,32 +50,51 @@ function CategoryList() {
         }
     };
 
+    // Add planner to cart
     const savePlanner = async () => {
+        if (!selectedCategory) {
+            alert("Izaberite kategoriju!");
+            return;
+        }
+    
+        const newPlanner = {
+            naziv: plannerName || "Moj planer",
+            boja: color,
+            font: font,
+            tekst: text,
+            slika: previewImage, // Prikaz slike ako je dodata
+            category_id: selectedCategory.id, // ID kategorije
+        };
+    
+        // Kreiranje FormData objekta za slanje slike zajedno sa drugim podacima
         const formData = new FormData();
-        formData.append('category_id', selectedCategory.id);
-        formData.append('naziv', plannerName);
-        formData.append('boja', color);
-        formData.append('font', font);
-        formData.append('tekst', text);
-    
-        // Dodajte sliku ako postoji
-        if (image) {
-            formData.append('slika', image); // Koristite 'slika' kao ključ
+        formData.append('naziv', newPlanner.naziv);
+        formData.append('boja', newPlanner.boja);
+        formData.append('font', newPlanner.font);
+        formData.append('tekst', newPlanner.tekst);
+        formData.append('category_id', newPlanner.category_id);
+        if (previewImage) {
+            formData.append('slika', previewImage);
         }
     
-        // Proverite sadržaj FormData
-        for (let [key, value] of formData.entries()) {
-            console.log(key, value);
-        }
-    
+        // Dodavanje planera u korpu (lokalno stanje)
         const token = localStorage.getItem('token');
         try {
+            // Slanje podataka na backend za čuvanje u bazi
             const response = await axios.post('http://127.0.0.1:8000/api/customizations', formData, {
                 headers: {
                     'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'multipart/form-data', // Obavezno za slanje fajlova
+                    'Content-Type': 'multipart/form-data',
                 },
             });
+    
+            const plannerWithId = {
+                ...newPlanner, 
+                id: response.data.planner.id, 
+                customizationId: response.data.customization_id // Dodajemo customization_id
+            };
+            setCart([...cart, plannerWithId]);
+    
             console.log('Planer sačuvan:', response.data);
             alert('Planer uspešno dodat u korpu!');
         } catch (error) {
@@ -81,6 +102,26 @@ function CategoryList() {
             alert('Došlo je do greške pri čuvanju planera.');
         }
     };
+    
+    const removeFromCart = async (plannerId, customizationId) => {
+        // Prvo ukloni planer iz lokalne korpe
+        setCart(cart.filter(planner => planner.id !== plannerId));
+    
+        const token = localStorage.getItem('token');
+        try {
+            // Pošaljemo DELETE zahtev ka backendu da obrišemo customizaciju iz baze
+            await axios.delete(`http://127.0.0.1:8000/api/customizations/${customizationId}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            console.log('Planer i customizacija uspešno obrisani');
+        } catch (error) {
+            console.error('Greška pri brisanju planera:', error.response?.data || error.message);
+            alert('Došlo je do greške pri brisanju planera.');
+        }
+    };
+    
 
     return (
         <section className="page-section">
@@ -104,14 +145,14 @@ function CategoryList() {
                                 style={{
                                     border: selectedCategory?.id === category.id ? '2px solid blue' : '1px solid #ccc',
                                     cursor: 'pointer',
-                                    padding: '10px',
-                                    margin: '10px',
+                                    padding: '0px',
+                                    margin: '0px',
                                 }}
                             >
                                 <img
                                     src={`/images/${category.naziv.toLowerCase()}.jpg`}
                                     alt={category.naziv}
-                                    style={{ width: '100px', height: '100px' }}
+                                    style={{ width: '250px', height: '500px' }}
                                 />
                                 <h3>{category.naziv}</h3>
                             </div>
@@ -124,17 +165,14 @@ function CategoryList() {
                 {/* Display form for color, font, and image */}
                 {selectedCategory && (
                     <div className="form-container" style={{ marginTop: '20px', display: 'flex', justifyContent: 'space-between' }}>
-                        {/* Form Section (Left side) */}
-                        
                         <div className="form-section" style={{ flex: 1 }}>
-                        <div className="divider-custom">
-                            <div className="divider-custom-line"></div>
-                            <div className="divider-custom-icon"><i className="fas fa-user"></i></div>
-                            <div className="divider-custom-line"></div>
-                        </div>
+                            <div className="divider-custom">
+                                <div className="divider-custom-line"></div>
+                                <div className="divider-custom-icon"><i className="fas fa-user"></i></div>
+                                <div className="divider-custom-line"></div>
+                            </div>
                             {/* Unos naziva planera */}
                             <div className="form-group">
-                        
                                 <input
                                     type="text"
                                     className="form-control"
@@ -190,11 +228,9 @@ function CategoryList() {
                                     onChange={handleImageUpload}
                                 />
                             </div>
-
-                            
                         </div>
 
-                        {/* Preview Section (Right side) */}
+                        {/* Preview Section */}
                         <div className="preview-section" style={{ flex: 1, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                             <div
                                 id="pdf-content"
@@ -211,7 +247,6 @@ function CategoryList() {
                                     boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
                                 }}
                             >
-                                {/* Naziv with selected font and color */}
                                 <h2
                                     style={{
                                         color: '#ffffff',
@@ -239,21 +274,68 @@ function CategoryList() {
                                 )}
                             </div>
                         </div>
-                        {/* Generate PDF button */}
-                        <button
-                            className="btn btn-primary btn-lg mt-3"
-                            onClick={savePlanner}
-                        >
+
+                        {/* Add to Cart button */}
+                        <button className="btn btn-primary btn-lg mt-3" onClick={savePlanner}>
                             Dodaj u korpu
                         </button>
                     </div>
                 )}
-                
-                
+
+                {/* Cart Sidebar */}
+                <div style={{
+                    position: 'fixed',
+                    top: 0,
+                    right: showCart ? '0' : '-300px', // Prikaz na klik
+                    width: '300px',
+                    height: '100vh',
+                    background: '#f8f9fa',
+                    boxShadow: '-2px 0 5px rgba(0,0,0,0.2)',
+                    padding: '20px',
+                    transition: 'right 0.3s ease-in-out',
+                    overflowY: 'auto'
+                }}>
+                    <h4>🛒 Korpa</h4>
+                    {cart.length === 0 ? <p>Korpa je prazna</p> : (
+                        cart.map((item, index) => (
+                            <div key={index} style={{ padding: '10px', borderBottom: '1px solid #ccc' }}>
+                                <strong>{item.naziv}</strong>
+                                <p style={{ fontSize: '14px' }}>{item.category}</p>
+                                <div style={{
+                                    background: item.boja,
+                                    width: '50px',
+                                    height: '50px',
+                                    borderRadius: '50%'
+                                }}></div>
+                                {item.slika && <img src={item.slika} alt="Planer" style={{ width: '50px', height: '50px', borderRadius: '5px' }} />}
+                                <button onClick={() => removeFromCart(item.id, item.customizationId)} className="btn btn-danger mt-2">Obriši</button>
+                            </div>
+                        ))
+                    )}
+                    <div style={{ 
+                        position: 'absolute', 
+                        bottom: '20px', 
+                        left: '50%', 
+                        transform: 'translateX(-50%)', 
+                        display: 'flex', 
+                        gap: '10px' 
+                    }}>
+                    <button onClick={() => setShowCart(false)} className="btn btn-secondary">Zatvori</button>
+                    <button onClick={() => window.location.href='/order'} className="btn btn-success">Nastavi narudžbinu</button>
+                </div>
+                </div>
+
+                {/* Cart button */}
+                <button
+                    className="btn btn-dark"
+                    style={{ position: 'fixed', top: '50px', right: '20px', zIndex:1000 }}
+                    onClick={() => setShowCart(!showCart)}
+                >
+                    🛒 Korpa ({cart.length})
+                </button>
             </div>
         </section>
     );
 }
 
 export default CategoryList;
-
