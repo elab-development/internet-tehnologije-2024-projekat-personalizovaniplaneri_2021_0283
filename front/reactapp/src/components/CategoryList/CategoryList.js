@@ -1,30 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { saveAs } from 'file-saver'; // For downloading the PDF
-import html2canvas from 'html2canvas'; // For capturing the content as an image
-import jsPDF from 'jspdf'; // For generating the PDF
 
 function CategoryList() {
     const [categories, setCategories] = useState([]);
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(true);
     const [selectedCategory, setSelectedCategory] = useState(null);
-    const [color, setColor] = useState('#000000'); // Default color: black
-    const [font, setFont] = useState('Arial'); // Default font: Arial
-    const [image, setImage] = useState(null); // For uploaded image
-    const [previewImage, setPreviewImage] = useState(null); // For image preview
+    const [color, setColor] = useState('#000000');
+    const [font, setFont] = useState('Arial');
+    const [image, setImage] = useState(null);
+    const [previewImage, setPreviewImage] = useState(null);
     const [plannerName, setPlannerName] = useState('');
     const [text, setText] = useState('');
-    const [cart, setCart] = useState([]); // Korpa state
-    const [showCart, setShowCart] = useState(false); // Da li je korpa vidljiva
+    const [cart, setCart] = useState(JSON.parse(localStorage.getItem('cart')) || []);
+    const [showCart, setShowCart] = useState(false);
 
-    // Fetch categories
     useEffect(() => {
         const token = localStorage.getItem('token');
         axios.get(`http://127.0.0.1:8000/api/categories`, {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
+            headers: { Authorization: `Bearer ${token}` }
         })
         .then(response => {
             setCategories(response.data.categories);
@@ -36,92 +30,46 @@ function CategoryList() {
         });
     }, []);
 
-    // Handle category selection
     const handleCategorySelect = (category) => {
         setSelectedCategory(category);
     };
 
-    // Handle image upload
     const handleImageUpload = (e) => {
         const file = e.target.files[0];
         if (file) {
             setImage(file);
-            setPreviewImage(URL.createObjectURL(file)); // Preview the uploaded image
+            setPreviewImage(URL.createObjectURL(file));
         }
     };
 
-    // Add planner to cart
-    const savePlanner = async () => {
+    const savePlanner = () => {
         if (!selectedCategory) {
             alert("Izaberite kategoriju!");
             return;
         }
-    
+
         const newPlanner = {
             naziv: plannerName || "Moj planer",
             boja: color,
             font: font,
             tekst: text,
-            slika: previewImage, // Prikaz slike ako je dodata
-            category_id: selectedCategory.id, // ID kategorije
+            category_id: selectedCategory.id,
+            slika: previewImage, // Čuvamo URL za prikaz u korpi
+            cena: 1500 // Primer cene, prilagodite po potrebi
         };
-    
-        // Kreiranje FormData objekta za slanje slike zajedno sa drugim podacima
-        const formData = new FormData();
-        formData.append('naziv', newPlanner.naziv);
-        formData.append('boja', newPlanner.boja);
-        formData.append('font', newPlanner.font);
-        formData.append('tekst', newPlanner.tekst);
-        formData.append('category_id', newPlanner.category_id);
-        if (previewImage) {
-            formData.append('slika', previewImage);
-        }
-    
-        // Dodavanje planera u korpu (lokalno stanje)
-        const token = localStorage.getItem('token');
-        try {
-            // Slanje podataka na backend za čuvanje u bazi
-            const response = await axios.post('http://127.0.0.1:8000/api/customizations', formData, {
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'multipart/form-data',
-                },
-            });
-    
-            const plannerWithId = {
-                ...newPlanner, 
-                id: response.data.planner.id, 
-                customizationId: response.data.customization_id // Dodajemo customization_id
-            };
-            setCart([...cart, plannerWithId]);
-    
-            console.log('Planer sačuvan:', response.data);
-            alert('Planer uspešno dodat u korpu!');
-        } catch (error) {
-            console.error('Greška:', error.response?.data || error.message);
-            alert('Došlo je do greške pri čuvanju planera.');
-        }
+
+        const updatedCart = [...cart, newPlanner];
+        setCart(updatedCart);
+        localStorage.setItem('cart', JSON.stringify(updatedCart));
+
+        alert('Planer uspešno dodat u korpu!');
     };
-    
-    const removeFromCart = async (plannerId, customizationId) => {
-        // Prvo ukloni planer iz lokalne korpe
-        setCart(cart.filter(planner => planner.id !== plannerId));
-    
-        const token = localStorage.getItem('token');
-        try {
-            // Pošaljemo DELETE zahtev ka backendu da obrišemo customizaciju iz baze
-            await axios.delete(`http://127.0.0.1:8000/api/customizations/${customizationId}`, {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            });
-            console.log('Planer i customizacija uspešno obrisani');
-        } catch (error) {
-            console.error('Greška pri brisanju planera:', error.response?.data || error.message);
-            alert('Došlo je do greške pri brisanju planera.');
-        }
+
+    const removeFromCart = (index) => {
+        const updatedCart = cart.filter((_, i) => i !== index);
+        setCart(updatedCart);
+        localStorage.setItem('cart', JSON.stringify(updatedCart));
     };
-    
 
     return (
         <section className="page-section">
@@ -134,7 +82,6 @@ function CategoryList() {
                 </div>
                 {error && <p style={{ color: 'red' }}>{error}</p>}
 
-                {/* Display categories */}
                 <div className="category-list">
                     {categories.length > 0 ? (
                         categories.map(category => (
@@ -158,11 +105,10 @@ function CategoryList() {
                             </div>
                         ))
                     ) : (
-                        !loading && categories.length === 0 && <p>Nema dostupnih kategorija</p>
+                        !loading && <p>Nema dostupnih kategorija</p>
                     )}
                 </div>
 
-                {/* Display form for color, font, and image */}
                 {selectedCategory && (
                     <div className="form-container" style={{ marginTop: '20px', display: 'flex', justifyContent: 'space-between' }}>
                         <div className="form-section" style={{ flex: 1 }}>
@@ -171,7 +117,6 @@ function CategoryList() {
                                 <div className="divider-custom-icon"><i className="fas fa-user"></i></div>
                                 <div className="divider-custom-line"></div>
                             </div>
-                            {/* Unos naziva planera */}
                             <div className="form-group">
                                 <input
                                     type="text"
@@ -181,8 +126,6 @@ function CategoryList() {
                                     placeholder="Unesite naziv planera"
                                 />
                             </div>
-
-                            {/* Unos teksta */}
                             <div className="form-group">
                                 <textarea
                                     className="form-control"
@@ -191,8 +134,6 @@ function CategoryList() {
                                     placeholder="Ostavite napomenu..."
                                 />
                             </div>
-
-                            {/* Color picker */}
                             <div className="form-group">
                                 <p>Izaberite boju: </p>
                                 <input
@@ -202,8 +143,6 @@ function CategoryList() {
                                     onChange={(e) => setColor(e.target.value)}
                                 />
                             </div>
-
-                            {/* Font picker */}
                             <div className="form-group">
                                 <label>Izaberite font: </label>
                                 <select
@@ -217,8 +156,6 @@ function CategoryList() {
                                     <option value="Verdana">Verdana</option>
                                 </select>
                             </div>
-
-                            {/* Image upload */}
                             <div className="form-group">
                                 <label>Dodajte sliku: </label>
                                 <input
@@ -230,7 +167,6 @@ function CategoryList() {
                             </div>
                         </div>
 
-                        {/* Preview Section */}
                         <div className="preview-section" style={{ flex: 1, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                             <div
                                 id="pdf-content"
@@ -257,8 +193,6 @@ function CategoryList() {
                                 >
                                     {selectedCategory.naziv}
                                 </h2>
-
-                                {/* Image preview */}
                                 {previewImage && (
                                     <img
                                         src={previewImage}
@@ -275,18 +209,16 @@ function CategoryList() {
                             </div>
                         </div>
 
-                        {/* Add to Cart button */}
                         <button className="btn btn-primary btn-lg mt-3" onClick={savePlanner}>
                             Dodaj u korpu
                         </button>
                     </div>
                 )}
 
-                {/* Cart Sidebar */}
                 <div style={{
                     position: 'fixed',
                     top: 0,
-                    right: showCart ? '0' : '-300px', // Prikaz na klik
+                    right: showCart ? '0' : '-300px',
                     width: '300px',
                     height: '100vh',
                     background: '#f8f9fa',
@@ -300,7 +232,6 @@ function CategoryList() {
                         cart.map((item, index) => (
                             <div key={index} style={{ padding: '10px', borderBottom: '1px solid #ccc' }}>
                                 <strong>{item.naziv}</strong>
-                                <p style={{ fontSize: '14px' }}>{item.category}</p>
                                 <div style={{
                                     background: item.boja,
                                     width: '50px',
@@ -308,7 +239,7 @@ function CategoryList() {
                                     borderRadius: '50%'
                                 }}></div>
                                 {item.slika && <img src={item.slika} alt="Planer" style={{ width: '50px', height: '50px', borderRadius: '5px' }} />}
-                                <button onClick={() => removeFromCart(item.id, item.customizationId)} className="btn btn-danger mt-2">Obriši</button>
+                                <button onClick={() => removeFromCart(index)} className="btn btn-danger mt-2">Obriši</button>
                             </div>
                         ))
                     )}
@@ -320,15 +251,14 @@ function CategoryList() {
                         display: 'flex', 
                         gap: '10px' 
                     }}>
-                    <button onClick={() => setShowCart(false)} className="btn btn-secondary">Zatvori</button>
-                    <button onClick={() => window.location.href='/order'} className="btn btn-success">Nastavi narudžbinu</button>
-                </div>
+                        <button onClick={() => setShowCart(false)} className="btn btn-secondary">Zatvori</button>
+                        <button onClick={() => window.location.href='/order'} className="btn btn-success">Nastavi narudžbinu</button>
+                    </div>
                 </div>
 
-                {/* Cart button */}
                 <button
                     className="btn btn-dark"
-                    style={{ position: 'fixed', top: '50px', right: '20px', zIndex:1000 }}
+                    style={{ position: 'fixed', top: '50px', right: '20px', zIndex: 1000 }}
                     onClick={() => setShowCart(!showCart)}
                 >
                     🛒 Korpa ({cart.length})

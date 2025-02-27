@@ -53,10 +53,10 @@ class CustomizationController extends Controller
 
         // Kreiraj customizaciju
         $customization = Customization::create([
-            'color' => $request->color,
+            'boja' => $request->boja,
             'font' => $request->font,
-            'text' => $request->text,
-            'image_path' => $imagePath,
+            'tekst' => $request->tekst,
+            'slika' => $imagePath,
             'planner_id' => $planner->id,
             'category_id' => $request->category_id,
         ]);

@@ -11,6 +11,7 @@ import CategoryList from "./components/CategoryList/CategoryList";
 import PrivateRoute from "./PrivateRoute";
 import Dashboard from "./components/Dashboard";
 import AdminRoute from "./components/AdminRoute";
+import Order from './pages/Order';
 
 
 function App() {
@@ -25,6 +26,7 @@ function App() {
             <CategoryList />
           </PrivateRoute>
         } />
+        <Route path="/order" element={<Order />} />
         <Route path="/dashboard" element={
           <AdminRoute> {/* Protect dashboard */}
             <Dashboard />

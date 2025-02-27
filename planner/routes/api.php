@@ -49,6 +49,7 @@ Route::get('/category/{id}/customizations', [CategoryCustomizationController::cl
 
 Route::resource('orders', OrderController::class);
 Route::get('/orders', [OrderController::class, 'index']);
+Route::post('/orders', [OrderController::class, 'store']);
 Route::get('/orders/{id}', [OrderController::class, 'show']);
 Route::get('/user/{id}/orders', [UserOrderController::class, 'index']);
 Route::get('/planner/{id}/orders', [PlannerOrderController::class, 'index']);
@@ -83,6 +84,10 @@ Route::middleware(['auth:sanctum', IsAdmin::class])->group(function () {
 Route::middleware('auth:sanctum')->get('/admin/profile', [AdminController::class, 'profile']);
 Route::middleware('auth:sanctum')->get('/profile', [AdminController::class, 'userProfile']);
 Route::middleware('auth:sanctum')->get('/admin/user', [AdminController::class, 'getUsers']);
+
+Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+    return $request->user();
+});
 
 
 
