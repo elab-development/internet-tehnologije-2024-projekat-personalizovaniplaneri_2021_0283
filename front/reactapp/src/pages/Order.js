@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import jsPDF from 'jspdf';
 
 function Order() {
     const [cart, setCart] = useState([]);
@@ -36,13 +37,13 @@ function Order() {
             alert('Molimo unesite adresu i broj telefona.');
             return;
         }
-
+    
         const userId = await getUserIdFromToken();
         if (!userId) {
             alert('Korisnik nije ulogovan.');
             return;
         }
-
+    
         const orderData = cart.map(item => ({
             naziv: item.naziv,
             boja: item.boja,
@@ -53,7 +54,7 @@ function Order() {
             cena: item.cena,
             user_id: userId,
         }));
-
+    
         try {
             const token = localStorage.getItem('token');
             const response = await fetch('http://127.0.0.1:8000/api/orders', {
@@ -64,18 +65,60 @@ function Order() {
                 },
                 body: JSON.stringify(orderData),
             });
-
+    
             if (!response.ok) {
                 throw new Error('Došlo je do greške pri slanju narudžbine.');
             }
-
+    
             alert('Narudžbina uspešno poslata!');
             localStorage.removeItem('cart');
+    
+            // Generiši PDF
+            generatePDF();
+    
             navigate('/');
         } catch (error) {
             console.error('Greška pri slanju narudžbine:', error.message);
             alert('Došlo je do greške pri slanju narudžbine.');
         }
+    };
+
+    const generatePDF = () => {
+        const doc = new jsPDF();
+    
+        // Naslov
+        doc.setFontSize(18);
+        doc.text('Račun za narudžbinu', 10, 10);
+    
+        // Detalji narudžbine
+        doc.setFontSize(12);
+        let yPos = 20;
+    
+        cart.forEach((item, index) => {
+            doc.text(`Proizvod ${index + 1}: ${item.naziv}`, 10, yPos);
+            yPos += 10;
+            doc.text(`Boja: ${item.boja}`, 10, yPos);
+            yPos += 10;
+            doc.text(`Font: ${item.font}`, 10, yPos);
+            yPos += 10;
+            doc.text(`Napomena: ${item.tekst}`, 10, yPos);
+            yPos += 10;
+            doc.text(`Cena: ${item.cena} RSD`, 10, yPos);
+            yPos += 15; // Dodajemo više prostora između proizvoda
+        });
+    
+        // Ukupna cena
+        doc.setFontSize(14);
+        doc.text(`Ukupna cena: ${totalPrice} RSD`, 10, yPos);
+    
+        // Adresa i telefon
+        yPos += 15;
+        doc.text(`Adresa: ${address}`, 10, yPos);
+        yPos += 10;
+        doc.text(`Telefon: ${phone}`, 10, yPos);
+    
+        // Sačuvaj PDF
+        doc.save('racun.pdf');
     };
 
     return (
@@ -140,6 +183,9 @@ function Order() {
 
                 <button className="btn btn-primary btn-lg mt-3" onClick={handleOrder}>
                     Pošalji narudžbinu
+                </button>
+                <button className="btn btn-secondary btn-lg mt-3" onClick={generatePDF}>
+                    Preuzmi račun kao PDF
                 </button>
             </div>
         </section>
