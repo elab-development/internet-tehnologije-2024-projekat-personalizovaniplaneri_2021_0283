@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import jsPDF from 'jspdf';
-import jsPDF from 'jspdf';
 
 function Order() {
     const [cart, setCart] = useState([]);
@@ -84,44 +83,6 @@ function Order() {
             console.error('Greška pri slanju narudžbine:', error.message);
             alert('Došlo je do greške pri slanju narudžbine.');
         }
-    };
-
-    const generatePDF = () => {
-        const doc = new jsPDF();
-    
-        // Naslov
-        doc.setFontSize(18);
-        doc.text('Račun za narudžbinu', 10, 10);
-    
-        // Detalji narudžbine
-        doc.setFontSize(12);
-        let yPos = 20;
-    
-        cart.forEach((item, index) => {
-            doc.text(`Proizvod ${index + 1}: ${item.naziv}`, 10, yPos);
-            yPos += 10;
-            doc.text(`Boja: ${item.boja}`, 10, yPos);
-            yPos += 10;
-            doc.text(`Font: ${item.font}`, 10, yPos);
-            yPos += 10;
-            doc.text(`Napomena: ${item.tekst}`, 10, yPos);
-            yPos += 10;
-            doc.text(`Cena: ${item.cena} RSD`, 10, yPos);
-            yPos += 15; // Dodajemo više prostora između proizvoda
-        });
-    
-        // Ukupna cena
-        doc.setFontSize(14);
-        doc.text(`Ukupna cena: ${totalPrice} RSD`, 10, yPos);
-    
-        // Adresa i telefon
-        yPos += 15;
-        doc.text(`Adresa: ${address}`, 10, yPos);
-        yPos += 10;
-        doc.text(`Telefon: ${phone}`, 10, yPos);
-    
-        // Sačuvaj PDF
-        doc.save('racun.pdf');
     };
 
     const generatePDF = () => {
