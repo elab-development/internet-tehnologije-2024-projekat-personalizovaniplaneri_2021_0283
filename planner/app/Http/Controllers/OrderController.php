@@ -46,6 +46,8 @@ class OrderController extends Controller
                 'planner_id' => $planner->id,
                 'user_id' => $orderItem['user_id'],
                 'cena' => $orderItem['cena'],
+                'status_porudzbine'=>'poruceno'
+                
             ]);
         }
 
