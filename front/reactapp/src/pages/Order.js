@@ -19,12 +19,14 @@ function Order() {
 
     const getUserIdFromToken = async () => {
         const token = localStorage.getItem('token');
+        
         if (!token) return null;
 
         try {
             const response = await axios.get('http://127.0.0.1:8000/api/user', {
                 headers: { Authorization: `Bearer ${token}` },
             });
+            console.log(response.data.id)
             return response.data.id;
         } catch (error) {
             console.error('Greška pri dobijanju korisnika:', error);
@@ -184,9 +186,7 @@ function Order() {
                 <button className="btn btn-primary btn-lg mt-3" onClick={handleOrder}>
                     Pošalji narudžbinu
                 </button>
-                <button className="btn btn-secondary btn-lg mt-3" onClick={generatePDF}>
-                    Preuzmi račun kao PDF
-                </button>
+                
             </div>
         </section>
     );
