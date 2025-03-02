@@ -1,0 +1,25 @@
+.auth-container {
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(15px);
+    border-radius: 12px;
+    box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.1);
+    padding: 40px;
+    max-width: 400px;
+    margin: auto;
+    margin-top: 50px;
+    text-align: center;
+}
+
+.auth-container input {
+    border: 2px solid #f4e1f4;
+    border-radius: 8px;
+    padding: 12px;
+    width: 100%;
+    margin-bottom: 15px;
+    outline: none;
+}
+
+.auth-container button {
+    width: 100%;
+    margin-top: 15px;
+}
