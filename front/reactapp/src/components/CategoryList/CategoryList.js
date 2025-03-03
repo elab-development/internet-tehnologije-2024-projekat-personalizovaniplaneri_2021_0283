@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState} from 'react';
 import axios from 'axios';
 import useFetchCategories from './../useFetchCategories';
+import Modal from './../Modal';
 
 function CategoryList() {
     const {categories, loading, error } = useFetchCategories();
@@ -13,6 +14,8 @@ function CategoryList() {
     const [text, setText] = useState('');
     const [cart, setCart] = useState(JSON.parse(localStorage.getItem('cart')) || []);
     const [showCart, setShowCart] = useState(false);
+    const [isModalOpen, setModalOpen] = useState(false);  // Uspešan modal
+    const [isErrorModalOpen, setErrorModalOpen] = useState(false);
 
     const getUserFromToken = async () => {
         const token = localStorage.getItem('token');
@@ -37,16 +40,23 @@ function CategoryList() {
         const userData = await getUserFromToken();
         if (userData) {
             if (userData.type_id === 3) {
-                alert('Morate se prijaviti da biste nastavili narudžbinu');
-                window.location.href = '/login'; // Preusmeravanje na login
+                setErrorModalOpen(true);  // Otvori modal za grešku
+                setTimeout(() => {
+                    setErrorModalOpen(false);  // Zatvori modal nakon 3 sekunde
+                    window.location.href = '/login';  // Preusmeravanje nakon 3 sekunde
+                }, 3000);
             } else {
                 window.location.href = '/order'; // Ako je korisnik validan, nastavi narudžbinu
             }
         } else {
-            alert('Morate se prijaviti da biste nastavili narudžbinu');
-            window.location.href = '/login'; // Preusmeravanje na login
+            setErrorModalOpen(true);  // Otvori modal za grešku
+            setTimeout(() => {
+                setErrorModalOpen(false);  // Zatvori modal nakon 3 sekunde
+                window.location.href = '/login';  // Preusmeravanje nakon 3 sekunde
+            }, 3000);
         }
     };
+    
     const handleCategorySelect = (category) => {
         setSelectedCategory(category);
     };
@@ -61,7 +71,8 @@ function CategoryList() {
 
     const savePlanner = () => {
         if (!selectedCategory) {
-            alert("Izaberite kategoriju!");
+            setErrorModalOpen(true);  // Otvori modal za grešku
+            setTimeout(() => setErrorModalOpen(false), 3000);  // Zatvori modal nakon 3 sekunde
             return;
         }
 
@@ -79,7 +90,8 @@ function CategoryList() {
         setCart(updatedCart);
         localStorage.setItem('cart', JSON.stringify(updatedCart));
 
-        alert('Planer uspešno dodat u korpu!');
+        setModalOpen(true);  // Otvori modal za uspeh
+        setTimeout(() => setModalOpen(false), 2000);
     };
 
     const removeFromCart = (index) => {
@@ -280,6 +292,15 @@ function CategoryList() {
                 >
                     🛒 Korpa ({cart.length})
                 </button>
+                  {/* Modal for success */}
+                  <Modal isOpen={isModalOpen} onClose={() => setModalOpen(false)} title="Uspešno!">
+                    <p>Planer je uspešno dodat u korpu!</p>
+                </Modal>
+
+                {/* Modal for error */}
+                <Modal isOpen={isErrorModalOpen} onClose={() => setErrorModalOpen(false)} title="Greška!">
+                    <p>Morate se prijaviti da biste nastavili narudžbinu!</p>
+                </Modal>
             </div>
         </section>
     );
