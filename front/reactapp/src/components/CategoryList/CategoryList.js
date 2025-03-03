@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import useFetchCategories from './../useFetchCategories';
 
 function CategoryList() {
-    const [categories, setCategories] = useState([]);
-    const [error, setError] = useState(null);
-    const [loading, setLoading] = useState(true);
+    const {categories, loading, error } = useFetchCategories();
     const [selectedCategory, setSelectedCategory] = useState(null);
     const [color, setColor] = useState('#000000');
     const [font, setFont] = useState('Arial');
@@ -15,20 +14,6 @@ function CategoryList() {
     const [cart, setCart] = useState(JSON.parse(localStorage.getItem('cart')) || []);
     const [showCart, setShowCart] = useState(false);
 
-    useEffect(() => {
-        const token = localStorage.getItem('token');
-        axios.get(`http://127.0.0.1:8000/api/categories`, {
-            headers: { Authorization: `Bearer ${token}` }
-        })
-        .then(response => {
-            setCategories(response.data.categories);
-            setLoading(false);
-        })
-        .catch(error => {
-            setError('Neuspešno učitavanje kategorija');
-            setLoading(false);
-        });
-    }, []);
     const getUserFromToken = async () => {
         const token = localStorage.getItem('token');
         
