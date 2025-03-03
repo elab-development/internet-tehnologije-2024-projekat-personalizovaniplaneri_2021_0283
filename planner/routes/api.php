@@ -54,6 +54,20 @@ Route::get('/orders/{id}', [OrderController::class, 'show']);
 Route::get('/user/{id}/orders', [UserOrderController::class, 'index']);
 Route::get('/planner/{id}/orders', [PlannerOrderController::class, 'index']);
 
+Route::middleware(['auth:sanctum'])->get('/order', function () {
+    $user = auth()->user(); // Dohvati autentifikovanog korisnika
+    Log::info('Korisnik: ', ['user' => $user]);
+
+    // Ako je korisnik gost, preusmeri ga na login
+    if ($user->isGuest()) {
+        return response()->json(['message' => 'Morate se prijaviti da biste nastavili narudžbinu.'], 403);
+    }
+
+    // Ako korisnik nije gost, dozvoli pristup
+    return response()->json(['message' => 'Možete nastaviti sa narudžbinom.']);
+});
+
+
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 

@@ -18,6 +18,7 @@ const Login = () => {
             });
             console.log("Uspešna admin prijava:", response.data);
             localStorage.setItem('token', response.data.access_token);
+            console.log("Token nakon admin prijave:", response.data.access_token); // Dodajemo log za token
             window.location.href = '/dashboard';  // Preusmeravanje na admin dashboard
         } catch (adminError) {
             console.error("Neuspešna admin prijava:", adminError.response?.data);
@@ -25,6 +26,9 @@ const Login = () => {
             console.log(email + password);
             const response = await axios.post('http://localhost:8000/api/login', { email, password });
            localStorage.setItem('token', response.data.access_token);
+           localStorage.setItem('user', JSON.stringify(response.data.user)); // Sačuvaj ceo korisnički objekat
+           console.log("Token nakon korisničke prijave:", response.data.access_token); // Dodajemo log za token
+
            setModalOpen(true); // Otvori modal
            setEmail('');
            setPassword('');

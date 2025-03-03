@@ -29,7 +29,39 @@ function CategoryList() {
             setLoading(false);
         });
     }, []);
+    const getUserFromToken = async () => {
+        const token = localStorage.getItem('token');
+        
+        if (!token) {
+            console.log('Nema tokena!');
+            return null;
+        }
 
+        try {
+            const response = await axios.get('http://127.0.0.1:8000/api/user', {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            return response.data; // Returns the user object which contains type_id
+        } catch (error) {
+            console.error('Greška pri dobijanju korisnika:', error);
+            return null;
+        }
+    };
+
+    const handleProceedToOrder = async () => {
+        const userData = await getUserFromToken();
+        if (userData) {
+            if (userData.type_id === 3) {
+                alert('Morate se prijaviti da biste nastavili narudžbinu');
+                window.location.href = '/login'; // Preusmeravanje na login
+            } else {
+                window.location.href = '/order'; // Ako je korisnik validan, nastavi narudžbinu
+            }
+        } else {
+            alert('Morate se prijaviti da biste nastavili narudžbinu');
+            window.location.href = '/login'; // Preusmeravanje na login
+        }
+    };
     const handleCategorySelect = (category) => {
         setSelectedCategory(category);
     };
@@ -252,7 +284,7 @@ function CategoryList() {
                         gap: '10px' 
                     }}>
                         <button onClick={() => setShowCart(false)} className="btn btn-secondary">Zatvori</button>
-                        <button onClick={() => window.location.href='/order'} className="btn btn-success">Nastavi narudžbinu</button>
+                        <button onClick={handleProceedToOrder} className="btn btn-success">Nastavi narudžbinu</button>
                     </div>
                 </div>
 

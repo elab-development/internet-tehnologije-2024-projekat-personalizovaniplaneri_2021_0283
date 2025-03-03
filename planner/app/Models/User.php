@@ -36,4 +36,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Order::class, 'order_id');
     }
+    public function isGuest()
+    {
+    return $this->type_id == 3; // Ako je tip korisnika "gost" (tip_id == 3)
+    }
+
 }

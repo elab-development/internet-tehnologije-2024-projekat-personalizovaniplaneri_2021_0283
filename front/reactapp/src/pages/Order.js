@@ -17,17 +17,20 @@ function Order() {
         setTotalPrice(price);
     }, []);
 
-    const getUserIdFromToken = async () => {
+    const getUserFromToken = async () => {
         const token = localStorage.getItem('token');
         
-        if (!token) return null;
+        if (!token) {
+            console.log('Nema tokena!');
+            return null;
+        }
 
         try {
             const response = await axios.get('http://127.0.0.1:8000/api/user', {
                 headers: { Authorization: `Bearer ${token}` },
             });
-            console.log(response.data.id)
-            return response.data.id;
+            console.log('Korisnički podaci:', response.data);
+            return response.data; // Returns the user object which contains type_id
         } catch (error) {
             console.error('Greška pri dobijanju korisnika:', error);
             return null;
@@ -39,13 +42,23 @@ function Order() {
             alert('Molimo unesite adresu i broj telefona.');
             return;
         }
-    
-        const userId = await getUserIdFromToken();
-        if (!userId) {
+
+        const user = await getUserFromToken();
+        if (!user) {
             alert('Korisnik nije ulogovan.');
+            navigate('/login'); // Preusmeri na login ako korisnik nije ulogovan
             return;
         }
-    
+
+        console.log('Proveravam type_id:', user.type_id);
+
+        // Check if user is a guest (type_id = 3)
+        if (user.type_id === 3) {
+            alert('Korisnici sa tipom 3 moraju da se prijave pre nego što nastave sa narudžbinom.');
+            navigate('/login'); // Redirect guest users to login
+            return;
+        }
+
         const orderData = cart.map(item => ({
             naziv: item.naziv,
             boja: item.boja,
@@ -54,9 +67,9 @@ function Order() {
             category_id: item.category_id,
             slika: item.slika,
             cena: item.cena,
-            user_id: userId,
+            user_id: user.id, // Use the user's id for the order
         }));
-    
+
         try {
             const token = localStorage.getItem('token');
             const response = await fetch('http://127.0.0.1:8000/api/orders', {
@@ -67,18 +80,18 @@ function Order() {
                 },
                 body: JSON.stringify(orderData),
             });
-    
+
             if (!response.ok) {
                 throw new Error('Došlo je do greške pri slanju narudžbine.');
             }
-    
+
             alert('Narudžbina uspešno poslata!');
             localStorage.removeItem('cart');
 
             // Generiši PDF
             generatePDF();
 
-            navigate('/');
+            navigate('/'); // Redirect after successful order
         } catch (error) {
             console.error('Greška pri slanju narudžbine:', error.message);
             alert('Došlo je do greške pri slanju narudžbine.');
@@ -87,15 +100,15 @@ function Order() {
 
     const generatePDF = () => {
         const doc = new jsPDF();
-    
+
         // Naslov
         doc.setFontSize(18);
         doc.text('Račun za narudžbinu', 10, 10);
-    
+
         // Detalji narudžbine
         doc.setFontSize(12);
         let yPos = 20;
-    
+
         cart.forEach((item, index) => {
             doc.text(`Proizvod ${index + 1}: ${item.naziv}`, 10, yPos);
             yPos += 10;
@@ -108,17 +121,17 @@ function Order() {
             doc.text(`Cena: ${item.cena} RSD`, 10, yPos);
             yPos += 15; // Dodajemo više prostora između proizvoda
         });
-    
+
         // Ukupna cena
         doc.setFontSize(14);
         doc.text(`Ukupna cena: ${totalPrice} RSD`, 10, yPos);
-    
+
         // Adresa i telefon
         yPos += 15;
         doc.text(`Adresa: ${address}`, 10, yPos);
         yPos += 10;
         doc.text(`Telefon: ${phone}`, 10, yPos);
-    
+
         // Sačuvaj PDF
         doc.save('racun.pdf');
     };
