@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import jsPDF from 'jspdf';
+import Breadcrumbs from '../components/Breadcrumbs';
+
 
 function Order() {
     const [cart, setCart] = useState([]);
@@ -139,8 +141,9 @@ function Order() {
     return (
         <section className="page-section">
             <div className="container">
-                <h2 className="text-uppercase text-secondary mb-3">Narudžbina</h2>
-                <div className="divider-custom">
+            <Breadcrumbs />
+            <h2 className="text-uppercase text-secondary mb-3" style={{ textAlign: 'center' }}>Narudžbina</h2>
+            <div className="divider-custom">
                     <div className="divider-custom-line"></div>
                     <div className="divider-custom-icon"><i className="fas fa-shopping-cart"></i></div>
                     <div className="divider-custom-line"></div>

@@ -221,7 +221,31 @@ body {
     height: 40px;
 }
 
-
+.breadcrumb {
+    background-color: transparent;
+    padding: 0;
+    margin-bottom: 20px;
+  }
+  
+  .breadcrumb-item + .breadcrumb-item::before {
+    content: ">";
+    color: #ff007f; /* Roza boja */
+  }
+  
+  .breadcrumb-item {
+    font-size: 16px;
+    color: #333; /* Tamno sivu boju za tekst */
+  }
+  
+  .breadcrumb-item a {
+    color: #ff007f; /* Roza boja linka */
+    text-decoration: none;
+  }
+  
+  .breadcrumb-item a:hover {
+    text-decoration: underline;
+  }
+  
 
 
 
