@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import jsPDF from 'jspdf';
 import Breadcrumbs from '../components/Breadcrumbs';
+import Button from '../components/Button';
+import Modal from '../components/Modal';
 
 
 function Order() {
@@ -10,6 +12,14 @@ function Order() {
     const [address, setAddress] = useState('');
     const [phone, setPhone] = useState('');
     const [totalPrice, setTotalPrice] = useState(0);
+    const [isAdressModalOpen, setAdressModalOpen] = useState(false);  // Uspešan modal
+    const [isErrorModalOpen, setErrorModalOpen] = useState(false);
+    const [isUserModalOpen, setUserModalOpen] = useState(false);
+    const [isTypeModalOpen, setTypeModalOpen] = useState(false);
+    const [isOrderModalOpen, setOrderModalOpen] = useState(false);
+    const [isPhoneModalOpen, setPhoneModalOpen] = useState(false);
+
+
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -40,27 +50,39 @@ function Order() {
     };
 
     const handleOrder = async () => {
-        if (!address || !phone) {
-            alert('Molimo unesite adresu i broj telefona.');
+        // Validacija unosa adrese
+        if (!address) {
+            setAdressModalOpen(true);  // Otvori modal za neuspeh
+            setTimeout(() => setAdressModalOpen(false), 5000);
             return;
         }
-
+    
+        // Validacija unosa broja telefona (proveravamo osnovni format telefona)
+        const phoneRegex = /^[+]?[0-9]{1,4}[ ]?[(]?[0-9]{1,4}[)]?[-\s]?[0-9]{1,4}[-\s]?[0-9]{1,4}$/;
+        if (!phone || !phoneRegex.test(phone)) {
+            setPhoneModalOpen(true); // Otvori modal za neuspeh
+            setTimeout(() => setPhoneModalOpen(false), 5000);
+            return;
+        }
+    
         const user = await getUserFromToken();
         if (!user) {
-            alert('Korisnik nije ulogovan.');
+            setUserModalOpen(true);  // Otvori modal za neuspeh
+            setTimeout(() => setUserModalOpen(false), 2000);
             navigate('/login'); // Preusmeri na login ako korisnik nije ulogovan
             return;
         }
-
+    
         console.log('Proveravam type_id:', user.type_id);
-
+    
         // Check if user is a guest (type_id = 3)
         if (user.type_id === 3) {
-            alert('Korisnici sa tipom 3 moraju da se prijave pre nego što nastave sa narudžbinom.');
+            setTypeModalOpen(true);  // Otvori modal za neuspeh
+            setTimeout(() => setTypeModalOpen(false), 2000);
             navigate('/login'); // Redirect guest users to login
             return;
         }
-
+    
         const orderData = cart.map(item => ({
             naziv: item.naziv,
             boja: item.boja,
@@ -71,7 +93,7 @@ function Order() {
             cena: item.cena,
             user_id: user.id, // Use the user's id for the order
         }));
-
+    
         try {
             const token = localStorage.getItem('token');
             const response = await fetch('http://127.0.0.1:8000/api/orders', {
@@ -82,23 +104,29 @@ function Order() {
                 },
                 body: JSON.stringify(orderData),
             });
-
+    
             if (!response.ok) {
                 throw new Error('Došlo je do greške pri slanju narudžbine.');
             }
-
-            alert('Narudžbina uspešno poslata!');
+    
+            setOrderModalOpen(true);
+            setTimeout(() => setOrderModalOpen(false), 3000);
             localStorage.removeItem('cart');
-
+    
             // Generiši PDF
             generatePDF();
-
-            navigate('/'); // Redirect after successful order
+    
+            setTimeout(() => {
+                navigate('/'); // Redirect after 3 seconds
+            }, 3000); // 3000 milisekundi = 3 sekunde
+    
         } catch (error) {
             console.error('Greška pri slanju narudžbine:', error.message);
-            alert('Došlo je do greške pri slanju narudžbine.');
+            setErrorModalOpen(true);  // Otvori modal za grešku
+            setTimeout(() => setErrorModalOpen(false), 3000);
         }
     };
+    
 
     const generatePDF = () => {
         const doc = new jsPDF();
@@ -199,10 +227,25 @@ function Order() {
                     Ukupna cena: {totalPrice} RSD
                 </div>
 
-                <button className="btn btn-primary btn-lg mt-3" onClick={handleOrder}>
-                    Pošalji narudžbinu
-                </button>
-                
+                <Button text="Naruči" onClick={handleOrder} className="btn-primary btn-lg mt-3"/>
+                <Modal isOpen={isTypeModalOpen} onClose={() => setTypeModalOpen(false)} title="Ulogujte se!">
+                    <p>Morate biti ulogovan korisnik!</p>
+                </Modal>
+                <Modal isOpen={isUserModalOpen} onClose={() => setUserModalOpen(false)} title="Ulogujte se!">
+                    <p>Korisnik nije ulogovan!</p>
+                </Modal>
+                <Modal isOpen={isAdressModalOpen} onClose={() => setAdressModalOpen(false)} title="Adresa i broj!">
+                    <p>Unesite Vašu adresu i broj telefona!</p>
+                </Modal>
+                <Modal isOpen={isErrorModalOpen} onClose={() => setErrorModalOpen(false)} title="Greška!">
+                    <p>Greška pri slanju narudžbine!</p>
+                </Modal>
+                <Modal isOpen={isOrderModalOpen} onClose={() => setOrderModalOpen(false)} title="Uspešno!">
+                    <p>Narudžbina uspešno poslata!</p>
+                </Modal>
+                <Modal isOpen={isPhoneModalOpen} onClose={() => setPhoneModalOpen(false)} title="Format!">
+                    <p>Broj telefona treba sadržati samo cifre!</p>
+                </Modal>
             </div>
         </section>
     );

@@ -2,6 +2,7 @@ import React, { useState} from 'react';
 import axios from 'axios';
 import useFetchCategories from './../useFetchCategories';
 import Modal from './../Modal';
+import Button from '../Button';
 
 function CategoryList() {
     const {categories, loading, error } = useFetchCategories();
@@ -238,9 +239,7 @@ function CategoryList() {
                             </div>
                         </div>
 
-                        <button className="btn btn-primary btn-lg mt-3" onClick={savePlanner}>
-                            Dodaj u korpu
-                        </button>
+                        <Button text="Dodaj u korpu" onClick={savePlanner} className="btn-primary btn-lg mt-3" />
                     </div>
                 )}
 
@@ -268,7 +267,7 @@ function CategoryList() {
                                     borderRadius: '50%'
                                 }}></div>
                                 {item.slika && <img src={item.slika} alt="Planer" style={{ width: '50px', height: '50px', borderRadius: '5px' }} />}
-                                <button onClick={() => removeFromCart(index)} className="btn btn-danger mt-2">Obriši</button>
+                                <Button text="Obriši" onClick={() => removeFromCart(index)} className="btn-danger mt-2" />
                             </div>
                         ))
                     )}
@@ -280,8 +279,8 @@ function CategoryList() {
                         display: 'flex', 
                         gap: '10px' 
                     }}>
-                        <button onClick={() => setShowCart(false)} className="btn btn-secondary">Zatvori</button>
-                        <button onClick={handleProceedToOrder} className="btn btn-success">Nastavi narudžbinu</button>
+                        <Button text="Zatvori" onClick={() => setShowCart(false)} className="btn-secondary" />
+                        <Button text="Nastavi narudžbinu" onClick={handleProceedToOrder} className="btn-success" />
                     </div>
                 </div>
 

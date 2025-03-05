@@ -1,5 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import Button from '../components/Button';
 
 function Home() {
   const navigate = useNavigate();
@@ -17,10 +18,10 @@ function Home() {
           <p className="lead">Personalizujte svoj planer i organizujte svoj dan na moderan način!</p>
           <div className="row justify-content-center">
             <div className="col-md-4">
-              <button className="btn btn-outline-primary btn-lg" onClick={() => navigate("/login")}>Prijava</button>
+              <Button text="Prijava" onClick={() => navigate("/login")} className="btn-outline-primary btn-lg"/>
             </div>
             <div className="col-md-4">
-              <button className="btn btn-outline-primary btn-lg" onClick={() => navigate("/register")}>Registracija</button>
+             <Button text="Registracija" onClick={() => navigate("/register")} className="btn-outline-primary btn-lg"/>
             </div>
           </div>
         </div>
