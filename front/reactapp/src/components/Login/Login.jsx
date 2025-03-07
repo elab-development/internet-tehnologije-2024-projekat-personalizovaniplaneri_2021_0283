@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import Modal from '../../components/Modal';
+import Modal from '../Modal';
 
 const Login = () => {
     const [email, setEmail] = useState('');
