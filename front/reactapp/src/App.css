@@ -1,0 +1,251 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap');
+
+body {
+    font-family: 'Inter', sans-serif;
+    background: linear-gradient(135deg, #f7f6fb, #f4e1f4);
+    color: #333;
+}
+
+/* Glavni kontejner */
+.page-section {
+    padding: 100px 0;
+}
+
+/* Sekcije */
+.page-section-heading {
+    font-size: 2rem;
+    font-weight: 600;
+}
+
+/* Linije */
+.divider-custom {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 20px 0;
+}
+
+.divider-custom-line {
+    width: 50px;
+    height: 4px;
+    background-color: #e1bee7;
+    margin: 0 10px;
+}
+
+.divider-custom-icon {
+    font-size: 2rem;
+    color: #ff8fa3;
+}
+
+/* Dugmad */
+.btn-primary {
+    background: linear-gradient(135deg, #ff8fa3, #ff6f91);
+    border: none;
+    font-weight: bold;
+    color: white;
+    box-shadow: 0px 4px 10px rgba(255, 143, 163, 0.3);
+    transition: all 0.3s ease-in-out;
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, #ff6f91, #ff4f7d);
+    transform: scale(1.05);
+}
+
+.btn-outline-primary {
+    border: 2px solid #ff8fa3;
+    color: #ff8fa3;
+}
+
+.btn-outline-primary:hover {
+    background: #ff8fa3;
+    color: white;
+}
+
+.btn-outline-secondary {
+    border: 2px solid #6c757d;
+    color: #6c757d;
+}
+
+.btn-outline-secondary:hover {
+    background: #6c757d;
+    color: white;
+}
+
+.navbar {
+  background-color: #f1b0bc !important;
+}
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  
+  .modal-content {
+    background: linear-gradient(135deg, #f7f6fb, #f4e1f4); /* Pozadina u skladu sa sajtom */
+    padding: 20px;
+    border-radius: 10px;
+    width: 350px;
+    text-align: center;
+    box-shadow: 0px 4px 15px rgba(255, 143, 163, 0.3); /* Slična senka kao dugmad */
+    color: #333; /* Tekst u tamnoj boji */
+}
+
+.modal-header {
+    background-color: #ff8fa3; /* Boja zaglavlja modala */
+    color: white;
+    padding: 10px;
+    font-weight: bold;
+    border-radius: 10px 10px 0 0;
+}
+
+.modal-footer {
+    display: flex;
+    justify-content: center;
+    padding: 10px;
+}
+
+.modal-footer button {
+    background: linear-gradient(135deg, #ff8fa3, #ff6f91); /* Dugme u istim bojama kao i primarna dugmad */
+    border: none;
+    color: white;
+    font-weight: bold;
+    padding: 10px 20px;
+    border-radius: 4px;
+    transition: all 0.3s ease-in-out;
+}
+
+.modal-footer button:hover {
+    background: linear-gradient(135deg, #ff6f91, #ff4f7d);
+    transform: scale(1.05);
+}
+
+/* Kontejner za sve kartice, horizontalno centriranje i dodatno spuštanje dole */
+.category-list {
+    display: flex;
+    justify-content: center; /* Centriranje kartica horizontalno */
+    align-items: center;
+    gap: 30px; /* Prostor između kartica */
+    overflow-x: auto; /* Omogućava horizontalno skrolovanje ako kartice ne stanu u ekran */
+    position: relative;
+    width: 100%;
+    padding: 40px 20px; /* Dodajemo više paddinga da spustimo kartice dole */
+    margin-top: 150px; /* Povećali smo razmak od vrha stranice */
+}
+
+/* Stilizovanje svake kartice */
+.category-card {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 20px; /* Skroz zaobljene ivice */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    text-align: center;
+    height: 350px; /* Povećana visina kartice */
+    width: 250px; /* Fiksna širina kartice */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* Osigurava da je naziv na dnu */
+    margin-bottom: 20px;
+}
+
+/* Efekat pri hover-u: kartica se uvećava */
+.category-card:hover {
+    transform: scale(1.05); /* Uvećanje kartice */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Stil slike */
+.category-card img {
+    width: 100%;
+    height: 300px; /* Manja visina slike */
+    object-fit: cover;
+    margin-bottom: 10px;
+    border-radius: 20px 20px 0 0; /* Zaobljene ivice samo na vrhu slike */
+}
+
+/* Stilizovanje naziva ispod svake kartice */
+.category-card h3 {
+    font-size: 1.2rem;
+    color: #333;
+    padding: 10px 0;
+    margin: 0;
+    font-weight: 600;
+    background-color: transparent; /* Pozadina bude transparentna */
+    text-align: center;
+}
+
+/* Form container (left and right sections) */
+.form-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px; /* Space between the form and the preview */
+}
+
+/* Left section for form */
+.form-section {
+    flex: 1;
+    max-width: 50%; /* Optional: restrict the max width */
+    
+}
+
+/* Right section for image preview */
+.preview-section {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Form inputs styling */
+.form-group {
+    margin-bottom: 20px;
+    display: flex;
+}
+
+.plus {
+    width: 100px;
+    margin-left: 20px;
+}
+
+.picker {
+    height: 40px;
+}
+
+.breadcrumb {
+    background-color: transparent;
+    padding: 0;
+    margin-bottom: 20px;
+  }
+  
+  .breadcrumb-item + .breadcrumb-item::before {
+    content: ">";
+    color: #ff007f; /* Roza boja */
+  }
+  
+  .breadcrumb-item {
+    font-size: 16px;
+    color: #333; /* Tamno sivu boju za tekst */
+  }
+  
+  .breadcrumb-item a {
+    color: #ff007f; /* Roza boja linka */
+    text-decoration: none;
+  }
+  
+  .breadcrumb-item a:hover {
+    text-decoration: underline;
+  }
+  
+
+
+

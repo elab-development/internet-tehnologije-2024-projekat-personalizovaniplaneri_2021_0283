@@ -1,0 +1,31 @@
+.navbar {
+    position: fixed;  /* Fiksiran na vrhu */
+    top: 0;
+    left: 0;
+    width: 100%;  /* Pun ekran */
+    background: rgba(255, 255, 255, 0.9); /* Lagano providan */
+    backdrop-filter: blur(10px); /* Stakleni efekat */
+    padding: 15px 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    z-index: 1000;  /* Iznad ostalih elemenata */
+}
+
+.navbar a {
+    color: #5c5470 !important;
+    font-weight: 600;
+    padding: 15px 20px;
+    transition: all 0.3s ease-in-out;
+}
+
+.navbar a:hover {
+    color: #d66382 !important;
+    text-decoration: underline;
+}
+
+/* Pomeri sadržaj stranice nadole da se ne preklapa sa navbarom */
+body {
+    padding-top: 60px;
+}
